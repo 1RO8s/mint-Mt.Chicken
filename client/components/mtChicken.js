@@ -4,26 +4,11 @@ const MtChicken = ({
   outlineColor,
   tosakaColor,
   beakColor,
-  moustacheColor,
-  bodyColor,
+  //moustacheColor,
+  //bodyColor,
   footColor,
   tailColor,
 }) => {
-  //outlineColor = {rgba:"#ccc", hex:""}
-  tosakaColor = { rgba: "#ccc", hex: "" };
-  beakColor = { rgba: "#ccc", hex: "" };
-  //tailColor = { rgba: "#ccc", hex: "" };
-
-  //const [outlineColor, setOutlineColor] = React.useState({})
-  //const [tosakaColor, setTosakaColor] = React.useState({})
-  //const [headColor, setHeadColor] = React.useState({})
-
-  //const [beakColor, setBeakColor] = React.useState({})
-  //const [bodyColor, setBodyColor] = React.useState({})
-  //const [footColor, setFootColor] = React.useState({})
-  //const [moustacheColor, setMoustacheColor] = React.useState({})
-  //const [tailColor, setTailColor] = React.useState({})
-
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000">
       <path id="bg-color" d="M0 0h1000v1000H0z" fill="#fff" />
@@ -162,7 +147,7 @@ const MtChicken = ({
       <path
         id="left-foot"
         d="M770.3 711.6c6.5-31.4 36.2-36 29.1-16.5-5 13.6-3.9 27.9.3 37.8 4.3-16 12.2-26 18.6-31.3 20.1-16.6 33.4-5.4 23.2 8.7-6.8 9.3-4.7 16.5-7.3 31.8 12.6-12.5 24.5-14.4 33.9-16.4 9.9-2.2 15.8 6.5 9.2 11.3-3.9 2.9-17.5 13-21.8 16.8-26.9 23.4-34.8 39.3-43.3 59.3-9.4 22.4-46.4 27.4-48.7-11.8-.9-15.1.5-59.2 6.8-89.7z"
-        fill="#ccc"
+        fill={footColor.rgba}
       />
       <path
         id="left-foot-outline"
