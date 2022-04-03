@@ -1,11 +1,11 @@
-import type { NextPage } from 'next'
+//import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import React from "react"
 import InputColor from "react-input-color"
 import MtChicken from "../components/mtChicken"
 
-const Home: NextPage = () => {
+const Home = () => {
 
   const [outlineColor, setOutlineColor] = React.useState({})
   const [tosakaColor, setTosakaColor] = React.useState({})
