@@ -24,19 +24,23 @@ const Home: NextPage = () => {
         <title>Create Next App</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
-      <main className="flex w-full flex-1 flex-col items-center justify-center px-20 text-center">
+      <div>
         <h1 className="text-6xl font-bold">
           Welcome to{' '}
           <a className="text-blue-600" href="https://nextjs.org">
             Next.js!
           </a>
         </h1>
-        <div style={{width: "500px"}}>
+      </div>
+      <main className="flex w-full flex-1 flex-row items-center justify-center px-20 text-center">
+        
+        <div className="w-1/2">
         <MtChicken
           outlineColor={outlineColor}
           tailColor={tailColor}
-
+          beakColor={beakColor}
+          tosakaColor={tosakaColor}
+          footColor={footColor}
         />
         </div>
         <div id="color-pickers" style={{margin: "30px"}}>
@@ -75,9 +79,7 @@ const Home: NextPage = () => {
           style={{ height: 30, width: 70, padding: 0}}
           placement="right"
         />
-      </div>
-
-        
+        </div>
       </main>
 
       <footer className="flex h-24 w-full items-center justify-center border-t">
