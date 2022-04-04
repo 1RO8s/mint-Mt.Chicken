@@ -1,3 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Lily+Script+One&display=swap');
+
+
+
+h1 {
+  font-family: 'Lily Script One';
+}
+
+/* Toggle A */
+input:checked ~ .dot {
+  transform: translateX(100%);
+}
+input:checked ~ .block {
+  background-color: lightblue;
+}
