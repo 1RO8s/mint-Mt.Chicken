@@ -7,7 +7,6 @@ import MtChicken from '../components/mtChicken'
 import Toggle from '../components/toggle'
 
 const Home = () => {
-
   //let accounts;
   //const isConneted = accounts == undefined;
 
@@ -31,7 +30,6 @@ const Home = () => {
       return
     }
 
-
     const accounts = await ethereum.request({ method: 'eth_requestAccounts' })
 
     console.log('Found account', accounts[0])
@@ -52,7 +50,7 @@ const Home = () => {
   const [tailShadowColor, setTailShadowColor] = React.useState({})
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center py-2 bg-green-50">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-green-50 py-2">
       <Head>
         <title>Mt.Chicken</title>
         <link rel="icon" href="/favicon.ico" />
@@ -208,6 +206,16 @@ const Home = () => {
             <Toggle text="頬の傷" />
             <Toggle text="腹の傷" />
           </div>
+          <button
+            className="m-5 rounded bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-400"
+          >
+            mint Mt.Chicken
+          </button>
+          <button
+            className="m-5 rounded bg-sky-300 py-2 px-4 font-bold text-white hover:bg-sky-200"
+          >
+            Twitter
+          </button>
         </div>
       </main>
 
