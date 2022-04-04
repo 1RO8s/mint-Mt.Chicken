@@ -37,10 +37,14 @@ const Home = () => {
         <div className="w-1/2">
         <MtChicken
           outlineColor={outlineColor}
+          headColor={headColor}
+          eyeColor={eyeColor}
           tailColor={tailColor}
           beakColor={beakColor}
           tosakaColor={tosakaColor}
           footColor={footColor}
+          moustacheColor={moustacheColor}
+          bodyColor={bodyColor}
         />
         </div>
         <div id="color-pickers" style={{margin: "30px"}}>
@@ -58,10 +62,24 @@ const Home = () => {
           style={{ height: 30, width: 70, padding: 0}}
           placement="right"
         />
-        <p>くちばし</p>
+        <p>め</p>
         <InputColor
-          initialValue="#ccc"
-          onChange={setBeakColor}
+          initialValue="#999"
+          onChange={setEyeColor}
+          style={{ height: 30, width: 70, padding: 0}}
+          placement="right"
+        />
+        <p>かお</p>
+        <InputColor
+          initialValue="#fff"
+          onChange={setHeadColor}
+          style={{ height: 30, width: 70, padding: 0}}
+          placement="right"
+        />
+        <p>からだ</p>
+        <InputColor
+          initialValue="#e6e6e6"
+          onChange={setBodyColor}
           style={{ height: 30, width: 70, padding: 0}}
           placement="right"
         />
@@ -69,6 +87,20 @@ const Home = () => {
         <InputColor
           initialValue="#fff"
           onChange={setTailColor}
+          style={{ height: 30, width: 70, padding: 0}}
+          placement="right"
+        />
+        <p>にくひげ</p>
+        <InputColor
+          initialValue="#b3b3b3"
+          onChange={setMoustacheColor}
+          style={{ height: 30, width: 70, padding: 0}}
+          placement="right"
+        />
+        <p>くちばし</p>
+        <InputColor
+          initialValue="#ccc"
+          onChange={setBeakColor}
           style={{ height: 30, width: 70, padding: 0}}
           placement="right"
         />
