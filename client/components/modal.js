@@ -1,9 +1,12 @@
-//import React from "react";
+import React from "react";
 import Image from 'next/image'
 import { FaTwitter } from 'react-icons/fa'
 import { VscClose } from 'react-icons/vsc'
+import { HiOutlineDownload } from 'react-icons/hi'
 
-const Modal = ({ showModal, setShowModal }) => {
+import MtChicken from './mtChicken'
+
+const Modal = ({ showModal, setShowModal, colors }) => {
   const modalContent = {
     background: 'white',
     padding: '10px',
@@ -27,43 +30,80 @@ const Modal = ({ showModal, setShowModal }) => {
     setShowModal(false)
   }
 
+  console.log('modal.props.colors')
+  console.log(colors)
+  console.log('...colors')
+  console.log({...colors})
+
+  const mtChickenElement = React.useRef(null)
+  const imgElm = React.useRef(null)
+  const downloadSVG = (e) => {
+    console.log('download svg!')
+    console.log(mtChickenElement)
+
+    // SCGをBlob化したあとURL生成
+    const svgText = new XMLSerializer().serializeToString(
+      mtChickenElement.current
+    )
+    const blob = new Blob([svgText], {type: 'image/svg+xml;charset=utf-8'})
+    const svgUrl = URL.createObjectURL(blob);
+
+    // 生成したSVGのダウンロード処理
+    const a = document.createElement("a");
+    a.href = svgUrl
+    a.download = 'MtChicken.svg'
+    a.click()
+    //a.dispatchEvent(new MouseEvent("click"));
+    URL.revokeObjectURL(svgUrl);
+  }
+
+
   if (showModal) {
-    console.log('open Modal!!')
+    console.log('#open modal')
     return (
       <div
         id="overlay"
-        className="fixed z-50 flex justify-center bg-gray-300"
+        className="fixed bg-gray-300"
         style={overlay}
       >
-        <div id="modalContent" style={modalContent}>
+        <div id="modalContent" className="flex flex-col w-fit" style={modalContent}>
           <VscClose className="rounded hover:bg-slate-200" onClick={closeModal}/>
           <div className="flex flex-row">
-            <div className="m-2 h-52 w-52 bg-slate-200 px-10">
-              <Image
-                src="/vercel.svg"
-                alt="Vercel Logo"
-                width={100}
-                height={200}
+            <div className="flex flex-col m-3 w-56">
+              <MtChicken
+              {...colors}
+              ref={mtChickenElement}
               />
+              <img ref={imgElm} className="hidden"/>
             </div>
-            <div className="m-2 flex flex-col bg-slate-300 p-2">
-              <p>ミントが完了しました</p>
-              <button className="m-1 rounded bg-yellow-300 px-4 py-2">
-                Download
+            <div className="flex flex-col m-3 p-3 text-center w-56">
+              <div className="flex flex-col font-bold">
+              <span>ミントが完了しました！</span>
+              <span className="font-lily text-sm">Mint has been completed!</span>
+              </div>
+              <button className="flex m-3 py-2 px-4 rounded font-bold bg-yellow-300 place-content-center" onClick={downloadSVG}>
+                <span className="flex">
+                <HiOutlineDownload  className="my-auto mx-1 text-slate-50" size="1.3em"/>
+                <span className="mx-1 text-white">Download</span>
+                </span>
               </button>
-              <a className="" href="https://tailwindcss.com/" target="_blank">
-                <button className="m-1 flex w-80 justify-center rounded bg-sky-300 px-1 py-2">
-                  <FaTwitter className="my-auto mx-1" />
-                  <span className="mx-1">Tweet</span>
-                </button>
-              </a>
+              <button className="flex m-3 py-2 px-4 rounded font-bold bg-sky-400 place-content-center">
+                <a
+                  className="flex"
+                  href="https://tailwindcss.com/"
+                  target="_blank"
+                >
+                  <FaTwitter className="my-auto mx-1 text-white" size="1.1em"/>
+                  <span className="mx-1 text-white">Tweet</span>
+                </a>
+              </button>
             </div>
           </div>
         </div>
       </div>
     )
   } else {
-    console.log('hidden Modal')
+    console.log('#close modal')
     return <></>
   }
 }
