@@ -6,9 +6,6 @@
 
 
 
-h1 {
-  font-family: 'Lily Script One';
-}
 
 /* Toggle A */
 input:checked ~ .dot {
@@ -16,4 +13,19 @@ input:checked ~ .dot {
 }
 input:checked ~ .block {
   background-color: #3b82f6ff;
+}
+
+.bg-main-color {
+  background-color: #16adff;
+}
+
+.rounded-xl {
+  border-radius: 1.3rem;
+}
+
+.button {
+  @apply text-white font-bold;
+  @apply bg-blue-500  hover:bg-blue-400 text-white;
+  @apply m-5 rounded py-2 px-4;
+  @apply min-w-max;
 }

@@ -1,17 +1,15 @@
-
-
-const Toggle = ({text}) => {
-  const msg = text || "[message]"
+const Toggle = ({ title, ruby }) => {
   return (
-    <label class="flex items-center cursor-pointer mx-3 my-3">
-    <div class="relative">
-      <input type="checkbox" class="sr-only"/>
-      <div class="block bg-gray-600 w-14 h-8 rounded-full"></div>
-      <div class="dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition"></div>
-    </div>
-    <div class="ml-3 text-gray-700 font-medium">
-      {msg}
-    </div>
+    <label className="mx-3 my-3 flex cursor-pointer flex-col items-center">
+      <div className="flex flex-col ml-3 font-medium text-gray-700">
+        <span className="text-xs">{ruby}</span>
+        <span className="text-sm">{title}</span>
+      </div>
+      <div className="relative">
+        <input type="checkbox" className="sr-only" />
+        <div className="block h-8 w-14 rounded-full bg-gray-600"></div>
+        <div className="dot absolute left-1 top-1 h-6 w-6 rounded-full bg-white transition"></div>
+      </div>
     </label>
   )
 }
