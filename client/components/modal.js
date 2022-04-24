@@ -3,10 +3,17 @@ import Image from 'next/image'
 import { FaTwitter } from 'react-icons/fa'
 import { VscClose } from 'react-icons/vsc'
 import { HiOutlineDownload } from 'react-icons/hi'
-
 import MtChicken from './mtChicken'
 
-const Modal = ({ showModal, setShowModal, colors, scribbles, bgColor }) => {
+const nftContractAddress = '0x865ccbfe3cac3ce0834c006c2581c08fd5ebc468'
+const opensea = 'https://testnets.opensea.io/assets/mumbai' // testnet
+//const opensea = 'https://opensea.io/assets/matic'
+
+const Modal = ({ showModal, setShowModal, colors, scribbles, bgColor, tokenId }) => {
+
+  const osUrl = `${opensea}/${nftContractAddress}/${tokenId}`
+  const intent = `https://twitter.com/intent/tweet?text=${encodeURI('ミントが完了しました！\n'+osUrl)}`
+
   const modalContent = {
     background: 'white',
     padding: '10px',
@@ -92,7 +99,7 @@ const Modal = ({ showModal, setShowModal, colors, scribbles, bgColor }) => {
               <button className="flex m-3 py-2 px-4 rounded font-bold bg-sky-400 place-content-center">
                 <a
                   className="flex"
-                  href="https://tailwindcss.com/"
+                  href={intent}
                   target="_blank"
                 >
                   <FaTwitter className="my-auto mx-1 text-white" size="1.1em"/>
