@@ -6,7 +6,7 @@ import { HiOutlineDownload } from 'react-icons/hi'
 
 import MtChicken from './mtChicken'
 
-const Modal = ({ showModal, setShowModal, colors }) => {
+const Modal = ({ showModal, setShowModal, colors, scribbles, bgColor }) => {
   const modalContent = {
     background: 'white',
     padding: '10px',
@@ -72,6 +72,8 @@ const Modal = ({ showModal, setShowModal, colors }) => {
             <div className="flex flex-col m-3 w-56">
               <MtChicken
               {...colors}
+              {...scribbles}
+              bgColor={'#ffffff'}
               ref={mtChickenElement}
               />
               <img ref={imgElm} className="hidden"/>

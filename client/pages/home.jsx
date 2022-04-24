@@ -14,13 +14,6 @@ const Home = () => {
   //let accounts;
   //const isConneted = accounts == undefined;
 
-  // Modal実装
-  const [showModal, setShowModal] = React.useState(false)
-
-  const openModal = async () => {
-    //await connectWallet()
-    setShowModal(true)
-  }
 
   const connectWallet = async () => {
     const { ethereum } = window
@@ -48,6 +41,9 @@ const Home = () => {
     console.log('connect!')
   }
 
+
+  // カラー設定初期化
+
   const [outlineColor, setOutlineColor] = React.useState({})
   const [tosakaColor, setTosakaColor] = React.useState({})
   const [headColor, setHeadColor] = React.useState({})
@@ -61,6 +57,12 @@ const Home = () => {
   const [tailColor, setTailColor] = React.useState({})
   const [tailShadowColor, setTailShadowColor] = React.useState({})
 
+  const [hasForehead, setForehead] = React.useState(false)
+  const [hasNose, setNose] = React.useState(false)
+  const [hasCheek, setCheek] = React.useState(false)
+  const [hasBerry, setBerry] = React.useState(false)
+
+  // 
   const colors = {
     outlineColor,
     tosakaColor,
@@ -76,9 +78,18 @@ const Home = () => {
     tailShadowColor,
   }
 
+  const scribbles= {
+    hasForehead,
+    hasNose,
+    hasCheek,
+    hasBerry
+  }
+
+
   console.log('colors:')
   console.log(colors)
 
+  // ランダム機能
   const randomColor = () => {
     return '#' + Math.floor(Math.random() * 16777215).toString(16)
   }
@@ -95,6 +106,14 @@ const Home = () => {
     setMoustacheColor({ hex: randomColor() })
     setTailColor({ hex: randomColor() })
     setTailShadowColor({ hex: randomColor() })
+  }
+
+  // Modal実装
+  const [showModal, setShowModal] = React.useState(false)
+  
+  const openModal = async () => {
+    //await connectWallet()
+    setShowModal(true)
   }
 
   return (
@@ -127,7 +146,7 @@ const Home = () => {
         <main className="bg-main-color grow-1 flex w-full flex-1 flex-col justify-center overflow-y-scroll px-20 text-center sm:flex-row">
           <div
             id="MtChicken"
-            className="flex h-max w-full justify-center bg-gray-400 sm:w-1/2"
+            className="flex h-max w-full justify-center sm:w-1/2"
           >
             <MtChicken
               outlineColor={outlineColor}
@@ -142,6 +161,11 @@ const Home = () => {
               moustacheColor={moustacheColor}
               bodyColor={bodyColor}
               bodyShadowColor={bodyShadowColor}
+              hasForehead={hasForehead}
+              hasCheek={hasCheek}
+              hasNose={hasNose}
+              hasBerry={hasBerry}
+              bgColor={"#16adff"}
             />
           </div>
           <div id="color-pickers" className="w-1/2 overflow-y-scroll pt-3 h-full">
@@ -227,8 +251,10 @@ const Home = () => {
               <h2 className="m-1 text-left text-xl font-bold">らくがき選択</h2>
               <hr></hr>
               <div className="flex flex-row">
-                <Toggle title="頬の傷" ruby="cheeks" />
-                <Toggle title="腹の傷" ruby="belly" />
+                <Toggle title="額の傷" ruby="forehead" state={hasForehead} setState={setForehead}/>
+                <Toggle title="頬の傷" ruby="cheek" state={hasCheek} setState={setCheek}/>
+                <Toggle title="ひげ" ruby="nose" state={hasNose} setState={setNose}/>
+                <Toggle title="腹の傷" ruby="belly" state={hasBerry} setState={setBerry}/>
               </div>
             </div>
             <div className="my-4 flex flex-row px-1">
@@ -290,6 +316,7 @@ const Home = () => {
         showModal={showModal}
         setShowModal={setShowModal}
         colors={colors}
+        scribbles={scribbles}
       />
     </>
   )
