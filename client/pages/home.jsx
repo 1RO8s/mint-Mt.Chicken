@@ -121,6 +121,7 @@ const Home = () => {
       console.log('Mining....', nftTx.hash)
       console.log("hexToInt('999999'):",hexToInt('999999'))
       setMiningStatus(0)
+      console.log('1.miningStatus:',miningStatus)
       
       // wait()が終わるまでローディング表示
       setIsLoading(true)
@@ -130,6 +131,7 @@ const Home = () => {
       setLoadingState(1)
       setMiningStatus(1)
       setIsLoading(false)
+      console.log('2.miningStatus:',miningStatus)
 
       let event = tx.events[0]
       let value = event.args[2]
@@ -137,9 +139,6 @@ const Home = () => {
       setNewItemId(tokenId)
       //console.log(`https://testnets.opensea.io/assets/mumbai/${nftContractAddress}/${tokenId}`)
       console.log(`${opensea}/${nftContractAddress}/${tokenId}`)
-      alert(`${opensea}/${nftContractAddress}/${tokenId}`)
-
-
     } catch (error) {
       console.log('Error minting character', error)
       setTxError(error.message)
@@ -218,6 +217,7 @@ const Home = () => {
   const openModal = async () => {
     await mintChicken()
     //alert('minted')
+    console.log('3.miningStatus:',miningStatus)
     if(miningStatus==1){
       setShowModal(true)
     } else {
