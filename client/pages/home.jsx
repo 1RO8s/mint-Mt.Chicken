@@ -6,9 +6,18 @@ import MtChicken from '../components/mtChicken'
 import Toggle from '../components/toggle'
 import ColorPicker from '../components/color-picker'
 import Modal from '../components/modal'
+import Loading from '../components/loading'
 // アイコン
 import { BiWalletAlt } from 'react-icons/bi'
 import { FaTwitter } from 'react-icons/fa'
+
+import NFT from '../utils/MtChickenNFT.json'
+import { ethers } from 'ethers'
+const nftContractAddress = '0x865ccbfe3cac3ce0834c006c2581c08fd5ebc468'
+
+const opensea = 'https://testnets.opensea.io/assets/mumbai' // testnet
+//const opensea = 'https://opensea.io/assets/matic'
+
 
 const Home = () => {
   //let accounts;
@@ -41,9 +50,102 @@ const Home = () => {
     console.log('connect!')
   }
 
+  const [txError, setTxError] = React.useState(null)
+  const [miningStatus, setMiningStatus] = React.useState(null) // 0:minting, 1:minted
+  const [loadingState, setLoadingState] = React.useState(0) // 0:loading, 1:loaded
+  const [isMinting, setIsMinting] = React.useState(false)
+  const [isLoading, setIsLoading] = React.useState(false)
+  const [newItemId, setNewItemId] = React.useState(null)
+  const mintChicken = async () => {
+    console.log('# mint start')
+    try {
+      const { ethereum } = window
 
-  // カラー設定初期化
+      if (!ethereum) {
+        console.log('Metamask not detected')
+        return
+      }
 
+      const provider = new ethers.providers.Web3Provider(ethereum)
+      const signer = provider.getSigner()
+      const nftContract = new ethers.Contract(
+        nftContractAddress,
+        NFT.abi,
+        signer
+      )
+      console.log('# contract')
+      console.log(nftContract)
+      console.log(signer)
+
+      const hexToInt = (s) => parseInt(s, 16)
+      console.log('## colors:',colors)
+      console.log('## colors.replace:',[
+        hexToInt(outlineColor.hex.slice(1,7)), // outline
+        hexToInt(tosakaColor.hex.slice(1,7)), // cockscomb
+        hexToInt(eyeColor.hex.slice(1,7)), // eyes
+        hexToInt(headColor.hex.slice(1,7)),  // face
+        hexToInt(headShadowColor.hex.slice(1,7)), // face shadow
+        hexToInt(bodyColor.hex.slice(1,7)), // body
+        hexToInt(bodyShadowColor.hex.slice(1,7)), // body shadow
+        hexToInt(tailColor.hex.slice(1,7)), // tail
+        hexToInt(tailShadowColor.hex.slice(1,7)), // tail shadow
+        hexToInt(moustacheColor.hex.slice(1,7)), // wattle
+        hexToInt(beakColor.hex.slice(1,7)), // beak
+        hexToInt(footColor.hex.slice(1,7)), // foot
+      ])
+
+      
+      let nftTx = await nftContract.mint(
+        [
+          hexToInt(outlineColor.hex.slice(1,7)), // outline
+          hexToInt(tosakaColor.hex.slice(1,7)), // cockscomb
+          hexToInt(eyeColor.hex.slice(1,7)), // eyes
+          hexToInt(headColor.hex.slice(1,7)),  // face
+          hexToInt(headShadowColor.hex.slice(1,7)), // face shadow
+          hexToInt(bodyColor.hex.slice(1,7)), // body
+          hexToInt(bodyShadowColor.hex.slice(1,7)), // body shadow
+          hexToInt(tailColor.hex.slice(1,7)), // tail
+          hexToInt(tailShadowColor.hex.slice(1,7)), // tail shadow
+          hexToInt(moustacheColor.hex.slice(1,7)), // wattle
+          hexToInt(beakColor.hex.slice(1,7)), // beak
+          hexToInt(footColor.hex.slice(1,7)), // foot
+        ],
+        //[false, true, false, false]
+        [
+          hasForehead,
+          hasNose,
+          hasCheek,
+          hasBerry
+        ]
+      )
+      console.log('Mining....', nftTx.hash)
+      console.log("hexToInt('999999'):",hexToInt('999999'))
+      setMiningStatus(0)
+      
+      // wait()が終わるまでローディング表示
+      setIsLoading(true)
+
+      let tx = await nftTx.wait()
+      setLoadingState(1)
+      setIsLoading(false)
+      console.log('Mined!', tx)
+      let event = tx.events[0]
+      let value = event.args[2]
+      let tokenId = value.toNumber()
+      setNewItemId(tokenId)
+      //console.log(`https://testnets.opensea.io/assets/mumbai/${nftContractAddress}/${tokenId}`)
+      console.log(`${opensea}/${nftContractAddress}/${tokenId}`)
+      alert(`${opensea}/${nftContractAddress}/${tokenId}`)
+
+
+    } catch (error) {
+      console.log('Error minting character', error)
+      setTxError(error.message)
+    }
+  }
+
+
+  // カラー設定
   const [outlineColor, setOutlineColor] = React.useState({})
   const [tosakaColor, setTosakaColor] = React.useState({})
   const [headColor, setHeadColor] = React.useState({})
@@ -112,7 +214,8 @@ const Home = () => {
   const [showModal, setShowModal] = React.useState(false)
   
   const openModal = async () => {
-    //await connectWallet()
+    await mintChicken()
+    //alert('minted')
     setShowModal(true)
   }
 
@@ -317,9 +420,12 @@ const Home = () => {
         setShowModal={setShowModal}
         colors={colors}
         scribbles={scribbles}
+        tokenId={newItemId}
+      />
+      <Loading
+        isLoading={isLoading}
       />
     </>
   )
 }
-
 export default Home
