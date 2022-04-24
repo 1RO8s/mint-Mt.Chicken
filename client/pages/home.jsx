@@ -368,6 +368,14 @@ const Home = () => {
               </div>
             </div>
             <div className="my-4 flex flex-row px-1">
+            <button
+              className="mx-3 flex w-fit place-content-center rounded bg-sky-400 border-sky-200 border-2 py-2 px-4 font-bold"
+              onClick={setRandomColor}
+            >
+              <span className="flex">
+                <span className="mx-1 flex text-white">ランダム</span>
+              </span>
+            </button>
               <button
                 className="mx-3 flex w-1/2 place-content-center rounded bg-yellow-300 py-2 px-4 font-bold"
                 onClick={openModal}
@@ -384,29 +392,6 @@ const Home = () => {
                   <span className="mx-1 flex text-white">mint Mt.Chicken</span>
                 </span>
               </button>
-              <button className="mx-3 flex w-1/2 place-content-center rounded bg-slate-50 py-2 px-4 font-bold">
-                <a
-                  className="flex"
-                  href="https://tailwindcss.com/"
-                  target="_blank"
-                >
-                  <FaTwitter
-                    className="my-auto mx-1 flex text-sky-400"
-                    size="1.3em"
-                  />
-                  <span className="mx-1 flex text-sky-400">Tweet</span>
-                </a>
-              </button>
-            </div>
-            <div className="my-4 flex flex-row px-1">
-            <button
-              className="mx-3 flex w-fit place-content-center rounded bg-sky-400 border-sky-200 border-2 py-2 px-4 font-bold"
-              onClick={setRandomColor}
-            >
-              <span className="flex">
-                <span className="mx-1 flex text-white">ランダム</span>
-              </span>
-            </button>
             </div>
           </div>
         </main>
