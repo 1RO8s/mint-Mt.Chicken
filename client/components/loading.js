@@ -29,7 +29,7 @@ const Loading = ({ isLoading}) => {
         style={overlay}
       >
         <p id="modalContent" className="flex flex-col w-fit">
-          Now Loading...
+          ミント中...
         </p>
       </div>
     )
