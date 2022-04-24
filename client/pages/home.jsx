@@ -126,9 +126,11 @@ const Home = () => {
       setIsLoading(true)
 
       let tx = await nftTx.wait()
+      console.log('Minted!', tx)
       setLoadingState(1)
+      setMiningStatus(1)
       setIsLoading(false)
-      console.log('Mined!', tx)
+
       let event = tx.events[0]
       let value = event.args[2]
       let tokenId = value.toNumber()
@@ -216,7 +218,12 @@ const Home = () => {
   const openModal = async () => {
     await mintChicken()
     //alert('minted')
-    setShowModal(true)
+    if(miningStatus==1){
+      setShowModal(true)
+    } else {
+      setShowModal(false)
+    }
+    
   }
 
   return (
