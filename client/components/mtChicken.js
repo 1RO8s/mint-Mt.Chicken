@@ -25,7 +25,7 @@ const MtChicken = ({
   //bgColor = "#16adff"
 
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" ref={ref}>
   <defs>
     <style>{`
       .outline {
