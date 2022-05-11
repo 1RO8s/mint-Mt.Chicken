@@ -95,35 +95,21 @@ const Home = () => {
 
       const hexToInt = (s) => parseInt(s, 16)
       console.log('## colors:', colors)
-      console.log('## colors.replace:', [
-        hexToInt(outlineColor.hex.slice(1, 7)), // outline
-        hexToInt(tosakaColor.hex.slice(1, 7)), // cockscomb
-        hexToInt(eyeColor.hex.slice(1, 7)), // eyes
-        hexToInt(headColor.hex.slice(1, 7)), // face
-        hexToInt(headShadowColor.hex.slice(1, 7)), // face shadow
-        hexToInt(bodyColor.hex.slice(1, 7)), // body
-        hexToInt(bodyShadowColor.hex.slice(1, 7)), // body shadow
-        hexToInt(tailColor.hex.slice(1, 7)), // tail
-        hexToInt(tailShadowColor.hex.slice(1, 7)), // tail shadow
-        hexToInt(moustacheColor.hex.slice(1, 7)), // wattle
-        hexToInt(beakColor.hex.slice(1, 7)), // beak
-        hexToInt(footColor.hex.slice(1, 7)), // foot
-      ])
 
       let nftTx = await nftContract.mint(
         [
-          hexToInt(outlineColor.hex.slice(1, 7)), // outline
-          hexToInt(tosakaColor.hex.slice(1, 7)), // cockscomb
-          hexToInt(eyeColor.hex.slice(1, 7)), // eyes
-          hexToInt(headColor.hex.slice(1, 7)), // face
-          hexToInt(headShadowColor.hex.slice(1, 7)), // face shadow
-          hexToInt(bodyColor.hex.slice(1, 7)), // body
-          hexToInt(bodyShadowColor.hex.slice(1, 7)), // body shadow
-          hexToInt(tailColor.hex.slice(1, 7)), // tail
-          hexToInt(tailShadowColor.hex.slice(1, 7)), // tail shadow
-          hexToInt(moustacheColor.hex.slice(1, 7)), // wattle
-          hexToInt(beakColor.hex.slice(1, 7)), // beak
-          hexToInt(footColor.hex.slice(1, 7)), // foot
+          hexToInt(outlineColor.slice(1, 7)), // outline
+          hexToInt(tosakaColor.slice(1, 7)), // cockscomb
+          hexToInt(eyeColor.slice(1, 7)), // eyes
+          hexToInt(headColor.slice(1, 7)), // face
+          hexToInt(headShadowColor.slice(1, 7)), // face shadow
+          hexToInt(bodyColor.slice(1, 7)), // body
+          hexToInt(bodyShadowColor.slice(1, 7)), // body shadow
+          hexToInt(tailColor.slice(1, 7)), // tail
+          hexToInt(tailShadowColor.slice(1, 7)), // tail shadow
+          hexToInt(moustacheColor.slice(1, 7)), // wattle
+          hexToInt(beakColor.slice(1, 7)), // beak
+          hexToInt(footColor.slice(1, 7)), // foot
         ],
         //[false, true, false, false]
         [hasForehead, hasNose, hasCheek, hasBerry]
