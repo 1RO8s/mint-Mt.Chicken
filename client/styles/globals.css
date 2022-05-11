@@ -10,9 +10,11 @@
 /* Toggle A */
 input:checked ~ .dot {
   transform: translateX(100%);
+  @apply bg-yellow-300
 }
 input:checked ~ .block {
-  background-color: #3b82f6ff;
+  /* background-color: #3b82f6ff; */
+  background-color: white;
 }
 
 .bg-main-color {
@@ -28,4 +30,18 @@ input:checked ~ .block {
   @apply bg-blue-500  hover:bg-blue-400 text-white;
   @apply m-5 rounded py-2 px-4;
   @apply min-w-max;
+}
+
+.circle-content {
+  overflow: hidden;
+}
+
+.top-circle {
+  width: 200px;
+	height: 40px;
+	border: solid 10px black;
+	border-radius: 0 0 200px 200px / 0 0 100px 100px; /* 上側を丸める */
+	border-top: 0; /* 直線部分を消す */
+	margin: 10px;
+	background-color: #c70032;
 }
