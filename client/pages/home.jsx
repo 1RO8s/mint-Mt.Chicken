@@ -230,7 +230,7 @@ const Home = () => {
   const [showModal, setShowModal] = React.useState(false)
 
   const openModal = async () => {
-    //await mintChicken()
+    await mintChicken()
     //alert('minted')
     setMiningStatus(1)
     console.log('3.miningStatus:', miningStatus)
