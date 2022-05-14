@@ -1,4 +1,5 @@
 import React from "react";
+import ReactLoading from "react-loading";
 
 const Loading = ({ isLoading}) => {
   const modalContent = {
@@ -28,9 +29,12 @@ const Loading = ({ isLoading}) => {
         className="fixed bg-gray-300"
         style={overlay}
       >
-        <p id="modalContent" className="flex flex-col w-fit">
+        <div className="flex flex-col">
+        <ReactLoading type="spin" color="#ffffff"/>
+        <p id="modalContent" className="flex flex-col w-fit text-white">
           ミント中...
         </p>
+        </div>
       </div>
     )
   } else {
