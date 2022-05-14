@@ -4,13 +4,10 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Lily+Script+One&display=swap');
 
-
-
-
 /* Toggle A */
 input:checked ~ .dot {
   transform: translateX(100%);
-  @apply bg-yellow-300
+  @apply bg-yellow-300;
 }
 input:checked ~ .block {
   /* background-color: #3b82f6ff; */
@@ -26,8 +23,8 @@ input:checked ~ .block {
 }
 
 .button {
-  @apply text-white font-bold;
-  @apply bg-blue-500  hover:bg-blue-400 text-white;
+  @apply font-bold text-white;
+  @apply bg-blue-500  text-white hover:bg-blue-400;
   @apply m-5 rounded py-2 px-4;
   @apply min-w-max;
 }
@@ -37,11 +34,10 @@ input:checked ~ .block {
 }
 
 .top-circle {
+  margin: -150px;
   width: 200px;
-	height: 40px;
-	border: solid 10px black;
-	border-radius: 0 0 200px 200px / 0 0 100px 100px; /* 上側を丸める */
-	border-top: 0; /* 直線部分を消す */
-	margin: 10px;
-	background-color: #c70032;
+  height: 200px;
+  border-radius: 200px 200px 200px 200px;
+  background: #c70032;
+  border: 10px solid #1a1a1a;
 }
