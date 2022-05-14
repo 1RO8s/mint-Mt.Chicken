@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import Image from 'next/image'
-import React from 'react'
+import React, { useEffect } from 'react'
 // コンポーネント
 import MtChicken from '../components/mtChicken'
 import Toggle from '../components/toggle'
@@ -13,10 +13,10 @@ import { FaTwitter } from 'react-icons/fa'
 
 import NFT from '../utils/MtChickenNFT.json'
 import { ethers } from 'ethers'
-const nftContractAddress = '0x865ccbfe3cac3ce0834c006c2581c08fd5ebc468'
 
+const nftContractAddress = '0x865ccbfe3cac3ce0834c006c2581c08fd5ebc468'
 const opensea = 'https://testnets.opensea.io/assets/mumbai' // testnet
-//const opensea = 'https://opensea.io/assets/matic'
+//const opensea = 'https://opensea.io/assets/matic' // production
 
 const chains = {
   main: { name: 'matic', id: '' },
@@ -29,59 +29,73 @@ const Home = () => {
   //let accounts;
   //const isConneted = accounts == undefined;
 
-  const isConnect = () => {
-    const { ethereum } = window
-    if (!ethereum) {
-      alert('Metamaskが見つかりませんでした')
-      return
+  let ethereum
+
+  const [walletConnected, setWalletConnected] = React.useState(0)
+
+  useEffect(() => {
+    console.log("useEffect 01")
+    ethereum = window.ethereum
+    console.log('# ethereum:', ethereum)
+    console.log('ethereum.isConnected():', ethereum.isConnected())
+
+    // イベント定義
+    ethereum.on('accountsChanged',(accounts) => {
+      console.log("# accountChanged:",accounts)
+      if(0 == accounts.length) {
+        setConnectBtnMsg('Connect wallet')
+      } else {
+        setConnectBtnMsg('Connected')
+      }
+    });
+
+  },[]) // 初回マウント時
+
+  // Walletを検出しているかどうか
+  const isDetectedWallet = () => {
+    ethereum = window.ethereum
+    if (ethereum && ethereum.isConnected()) {
+      return true
     } else {
-      console.log()
+      return false
     }
   }
 
-  const connectWallet = async () => {
-    const { ethereum } = window
-    if (!ethereum) {
-      console.log('Metamask not detected')
-      return
-    } else {
-      console.log('Metamask')
-      console.log(ethereum)
-    }
-
+  // 接続しているチェーンが正しいか確認する
+  const isValidChain = async () => {
     let chainId = await ethereum.request({ method: 'eth_chainId' })
-    console.log('Connected to chain:' + chainId)
-    //const rinkebyChainId = '0x4'
-    const mumbaiChainId = '0x13881'
-
-    if (chainId !== mumbaiChainId) {
+    if (chainId == chain.id) {
+      console.log('Connected to chain:' + chainId)
+      return true
+    } else {
       //alert('You are not connected to the Mumbai Testnet!')
       alert(`${chain.name}チェーンに接続してください`)
-      return
+      return false
     }
+  }
 
+  const [connectBtnMsg, setConnectBtnMsg] = React.useState('Connect wallet')
+  const connectWallet = async () => {
+    if (!isDetectedWallet()) return
+    if (! await isValidChain()) return
     const accounts = await ethereum.request({ method: 'eth_requestAccounts' })
-
-    console.log('Found account', accounts[0])
-    console.log('connect!')
   }
 
   const [txError, setTxError] = React.useState(null)
-  const [miningStatus, setMiningStatus] = React.useState(null) // 0:minting, 1:minted
-  const [loadingState, setLoadingState] = React.useState(0) // 0:loading, 1:loaded
-  const [isMinting, setIsMinting] = React.useState(false)
+  const [miningStatus, setMiningStatus] = React.useState(0) // 0:before mint 1:minting, 2:minted
+  //const [loadingState, setLoadingState] = React.useState(0) // 0:loading, 1:loaded
+  //const [isMinting, setIsMinting] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(false)
   const [newItemId, setNewItemId] = React.useState(null)
+
+  // ミント実行
   const mintChicken = async () => {
     console.log('# mint start')
     try {
-      const { ethereum } = window
+      if (!isDetectedWallet) return false
+      if (! await isValidChain()) return false
 
-      if (!ethereum) {
-        console.log('Metamask not detected')
-        return
-      }
-
+      // コントラクト取得
       const provider = new ethers.providers.Web3Provider(ethereum)
       const signer = provider.getSigner()
       const nftContract = new ethers.Contract(
@@ -89,13 +103,12 @@ const Home = () => {
         NFT.abi,
         signer
       )
-      console.log('# contract')
-      console.log(nftContract)
-      console.log(signer)
+      console.log('# nftContract:',nftContract)
+      console.log("# signer:",signer)
 
-      const hexToInt = (s) => parseInt(s, 16)
+      // ミント
       console.log('## colors:', colors)
-
+      const hexToInt = (s) => parseInt(s, 16)
       let nftTx = await nftContract.mint(
         [
           hexToInt(outlineColor.slice(1, 7)), // outline
@@ -111,12 +124,10 @@ const Home = () => {
           hexToInt(beakColor.slice(1, 7)), // beak
           hexToInt(footColor.slice(1, 7)), // foot
         ],
-        //[false, true, false, false]
         [hasForehead, hasNose, hasCheek, hasBerry]
       )
-      console.log('Mining....', nftTx.hash)
-      console.log("hexToInt('999999'):", hexToInt('999999'))
-      setMiningStatus(0)
+      console.log('minting...', nftTx.hash)
+      setMiningStatus(1)
       console.log('1.miningStatus:', miningStatus)
 
       // wait()が終わるまでローディング表示
@@ -124,8 +135,7 @@ const Home = () => {
 
       let tx = await nftTx.wait()
       console.log('Minted!', tx)
-      setLoadingState(1)
-      setMiningStatus(1)
+      setMiningStatus(2)
       setIsLoading(false)
       console.log('2.miningStatus:', miningStatus)
 
@@ -133,7 +143,6 @@ const Home = () => {
       let value = event.args[2]
       let tokenId = value.toNumber()
       setNewItemId(tokenId)
-      //console.log(`https://testnets.opensea.io/assets/mumbai/${nftContractAddress}/${tokenId}`)
       console.log(`${opensea}/${nftContractAddress}/${tokenId}`)
     } catch (error) {
       console.log('Error minting character', error)
@@ -154,13 +163,11 @@ const Home = () => {
   const [moustacheColor, setMoustacheColor] = React.useState('#b3b3b3')
   const [tailColor, setTailColor] = React.useState('#ffffff')
   const [tailShadowColor, setTailShadowColor] = React.useState('#cccccc')
-
+  // 落書き設定
   const [hasForehead, setForehead] = React.useState(false)
   const [hasNose, setNose] = React.useState(false)
   const [hasCheek, setCheek] = React.useState(false)
   const [hasBerry, setBerry] = React.useState(false)
-
-  const mtChickenElement = React.useRef(null)
 
   //
   const colors = {
@@ -188,16 +195,16 @@ const Home = () => {
   console.log('colors:')
   console.log(colors)
 
-  // ランダム機能
-  const randomColor = () => {
-    return (
-      '#' +
-      Math.floor(Math.random() * 16777215)
-        .toString(16)
-        .padStart(6, '0')
-    )
-  }
+  // ランダム
   const setRandomColor = () => {
+    const randomColor = () => {
+      return (
+        '#' +
+        Math.floor(Math.random() * 16777215)
+          .toString(16)
+          .padStart(6, '0')
+      )
+    }
     setOutlineColor(randomColor())
     setTosakaColor(randomColor())
     setHeadColor(randomColor())
@@ -214,13 +221,12 @@ const Home = () => {
 
   // Modal実装
   const [showModal, setShowModal] = React.useState(false)
-
   const openModal = async () => {
     await mintChicken()
     //alert('minted')
-    setMiningStatus(1)
     console.log('3.miningStatus:', miningStatus)
-    if (miningStatus == 1) {
+    // console.log("# minted:",minted)
+    if (miningStatus == 2) {
       setShowModal(true)
     } else {
       setShowModal(false)
@@ -254,7 +260,7 @@ const Home = () => {
           >
             <span className="flex">
               <BiWalletAlt className="my-auto mx-1" />
-              <span>connect Wallet</span>
+              <span>{connectBtnMsg}</span>
             </span>
           </button>
         </header>
@@ -264,7 +270,6 @@ const Home = () => {
               {...colors}
               {...scribbles}
               bgColor={'#16adff'}
-              ref={mtChickenElement}
             />
           </div>
           <div
