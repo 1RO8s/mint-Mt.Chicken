@@ -7,9 +7,11 @@ import Toggle from '../components/toggle'
 import ColorPicker from '../components/color-picker'
 import Modal from '../components/modal'
 import Loading from '../components/loading'
+import Footer from '../components/footer'
 // アイコン
 import { BiWalletAlt } from 'react-icons/bi'
 import { FaTwitter } from 'react-icons/fa'
+import { FaDiscord } from 'react-icons/fa'
 
 import NFT from '../utils/MtChickenNFT.json'
 import { ethers } from 'ethers'
@@ -32,24 +34,25 @@ const Home = () => {
   let ethereum
 
   const [walletConnected, setWalletConnected] = React.useState(0)
+  const [accounts, setAccount] = React.useState([])
 
   useEffect(() => {
-    console.log("useEffect 01")
+    console.log('useEffect 01')
     ethereum = window.ethereum
     console.log('# ethereum:', ethereum)
     console.log('ethereum.isConnected():', ethereum.isConnected())
 
     // イベント定義
-    ethereum.on('accountsChanged',(accounts) => {
-      console.log("# accountChanged:",accounts)
-      if(0 == accounts.length) {
+    ethereum.on('accountsChanged', (_accounts) => {
+      console.log('# accountChanged:', accounts)
+      setAccount(_accounts)
+      if (0 == accounts.length) {
         setConnectBtnMsg('Connect wallet')
       } else {
         setConnectBtnMsg('Connected')
       }
-    });
-
-  },[]) // 初回マウント時
+    })
+  }, []) // 初回マウント時
 
   // Walletを検出しているかどうか
   const isDetectedWallet = () => {
@@ -63,6 +66,8 @@ const Home = () => {
 
   // 接続しているチェーンが正しいか確認する
   const isValidChain = async () => {
+    console.log("call isValidChain")
+    ethereum = window.ethereum
     let chainId = await ethereum.request({ method: 'eth_chainId' })
     if (chainId == chain.id) {
       console.log('Connected to chain:' + chainId)
@@ -76,8 +81,9 @@ const Home = () => {
 
   const [connectBtnMsg, setConnectBtnMsg] = React.useState('Connect wallet')
   const connectWallet = async () => {
+    console.log("1. ethereum:",ethereum)
     if (!isDetectedWallet()) return
-    if (! await isValidChain()) return
+    if (!(await isValidChain())) return
     const accounts = await ethereum.request({ method: 'eth_requestAccounts' })
   }
 
@@ -91,9 +97,15 @@ const Home = () => {
   // ミント実行
   const mintChicken = async () => {
     console.log('# mint start')
+    ethereum = window.ethereum
     try {
+      console.log("#1 accounts:",accounts)
       if (!isDetectedWallet) return false
-      if (! await isValidChain()) return false
+      if (!(await isValidChain())) return false
+      if (0 == accounts.length) {
+        alert("ウォレットを接続してください")
+        return
+      }
 
       // コントラクト取得
       const provider = new ethers.providers.Web3Provider(ethereum)
@@ -103,8 +115,8 @@ const Home = () => {
         NFT.abi,
         signer
       )
-      console.log('# nftContract:',nftContract)
-      console.log("# signer:",signer)
+      console.log('# nftContract:', nftContract)
+      console.log('# signer:', signer)
 
       // ミント
       console.log('## colors:', colors)
@@ -237,11 +249,11 @@ const Home = () => {
     <>
       <Head>
         <title>Mt.Chicken</title>
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/mt-chicken.png" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
-          href="https://fonts.googleapis.com/css2?family=Lily+Script+One&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Lily+Script+One&family=M+PLUS+1:wght@400;500;700&family=Ubuntu:wght@400;700&display=swap"
           rel="stylesheet"
         />
       </Head>
@@ -258,7 +270,7 @@ const Home = () => {
             className="m-5 rounded bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-400"
             onClick={connectWallet}
           >
-            <span className="flex">
+            <span className="flex font-ubuntu">
               <BiWalletAlt className="my-auto mx-1" />
               <span>{connectBtnMsg}</span>
             </span>
@@ -266,20 +278,16 @@ const Home = () => {
         </header>
         <main className="bg-main-color grow-1 flex w-full flex-1 flex-col justify-center overflow-y-scroll px-20 text-center sm:flex-row">
           <div id="MtChicken" className="flex h-max w-1/2 flex-col">
-            <MtChicken
-              {...colors}
-              {...scribbles}
-              bgColor={'#16adff'}
-            />
+            <MtChicken {...colors} {...scribbles} bgColor={'#16adff'} />
           </div>
           <div
             id="color-pickers"
             className="h-full w-1/2 overflow-y-scroll pt-3"
           >
             <div className="m-3 rounded-xl bg-white p-3">
-              <h2 className="m-1 text-left text-xl font-bold">
-                <span>色選択</span>
-                <span className="mx-2 text-sm">Color Select</span>
+              <h2 className="mb-1 text-left text-xl">
+                <span className='font-mplus1 font-bold'>色選択</span>
+                <span className="font-ubuntu text-sm mx-2">Color Select</span>
               </h2>
               <hr style={{ border: 'solid 1px black' }} />
               <div className="flex flex-wrap">
@@ -370,9 +378,9 @@ const Home = () => {
               </div>
             </div>
             <div className="m-3 rounded-xl bg-white p-3">
-              <h2 className="m-1 text-left text-xl font-bold">
-                <span>らくがき選択</span>
-                <span className="mx-2 text-sm">Doodle Select</span>
+              <h2 className="m-1 text-left text-xl">
+                <span className='font-mplus1 font-bold'>らくがき選択</span>
+                <span className="mx-2 font-ubuntu text-sm">Doodle Select</span>
               </h2>
               <hr></hr>
               <div className="flex flex-row">
@@ -404,15 +412,15 @@ const Home = () => {
             </div>
             <div className="my-4 flex flex-row px-1">
               <button
-                className="mx-3 flex w-fit place-content-center rounded border-2 border-sky-200 bg-sky-400 py-2 px-4 font-bold"
+                className="mx-3 flex w-1/2 place-content-center rounded border-2 border-sky-200 bg-sky-400 hover:bg-sky-300 py-2 px-4 font-bold"
                 onClick={setRandomColor}
               >
                 <span className="flex">
-                  <span className="mx-1 flex text-white">ランダム</span>
+                  <span className="mx-1 flex font-mplus1 text-white">おまかせ</span>
                 </span>
               </button>
               <button
-                className="mx-3 flex w-1/2 place-content-center rounded bg-yellow-300 py-2 px-4 font-bold"
+                className="mx-3 flex w-1/2 place-content-center rounded bg-yellow-300 hover:bg-yellow-200 py-2 px-4 font-bold"
                 onClick={openModal}
               >
                 <span className="flex">
@@ -424,23 +432,35 @@ const Home = () => {
                     className="my-auto mx-1"
                     style={{ fill: '#fff' }}
                   />
-                  <span className="mx-1 flex text-white">mint Mt.Chicken</span>
+                  <span className="mx-1 flex font-ubuntu text-white">Mint</span>
                 </span>
               </button>
             </div>
+            <hr style={{ border: 'solid 2px rgba(255, 255, 255, 0.1)',backgroundColor:'rgba(255, 255, 255, 0.4)' }} />
+            <div className="my-4 text-left">
+              <span className="font-ubuntu font-bold text-white">Follow us!!</span>
+              <div className="my-2 flex">
+                <a href="https://twitter.com/MtChicken_NFT" target="_blank">
+                  <FaTwitter className="my-auto mx-1 text-white" size="2rem" />
+                </a>
+                <a href="https://discord.gg/beZTBcRfYt" target="_blank">
+                  <FaDiscord className="my-auto mx-1 text-white" size="2rem" />
+                </a>
+              </div>
+              <div className="my-10 flex flex-row">
+                <Image
+                  src="/mt-chicken.png"
+                  alt="Mt.Chicken logo"
+                  width={65}
+                  height={53}
+                />
+                <h2 className="my-auto mx-2 font-lily text-3xl text-white">
+                  Mt.Chicken
+                </h2>
+              </div>
+            </div>
           </div>
         </main>
-        <footer className="flex h-12 w-full items-center justify-center border-t">
-          <a
-            className="flex items-center justify-center gap-2"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Powered by{' '}
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </a>
-        </footer>
       </div>
       <Modal
         showModal={showModal}
