@@ -8,8 +8,8 @@ const Toggle = ({ title, ruby, state, setState }) => {
   return (
     <label className="mx-3 my-3 flex cursor-pointer flex-col">
       <div className="flex flex-col font-medium text-gray-700 text-left">
-        <span className="text-xs">{ruby}</span>
-        <span className="text-sm font-bold">{title}</span>
+        <span className="text-xs font-ubuntu">{ruby}</span>
+        <span className="text-sm font-mplus1 font-bold">{title}</span>
       </div>
       <div className="relative">
         <input type="checkbox" className="sr-only" onClick={switchToggle}/>

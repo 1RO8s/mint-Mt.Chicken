@@ -51,8 +51,8 @@ class ColorPicker extends React.Component {
     return (
       <div className="mx-1 my-1 flex flex-col items-left text-left">
         <div className="flex flex-col mb-1">
-          <span className="text-xs">{ruby}</span>
-          <span className="text-sm font-bold">{title}</span>
+          <span className="text-xs font-ubuntu">{ruby}</span>
+          <span className="text-sm font-mplus1 font-bold">{title}</span>
         </div>
         <div>
           <div style={styles.swatch} onClick={this.handleClick}>
