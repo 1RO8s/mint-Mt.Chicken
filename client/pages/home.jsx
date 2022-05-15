@@ -1,18 +1,17 @@
 import Head from 'next/head'
 import Image from 'next/image'
-import React, { useEffect } from 'react'
+import React from 'react'
 // コンポーネント
 import MtChicken from '../components/mtChicken'
 import Toggle from '../components/toggle'
 import ColorPicker from '../components/color-picker'
 import Modal from '../components/modal'
 import Loading from '../components/loading'
-import Footer from '../components/footer'
 // アイコン
 import { BiWalletAlt } from 'react-icons/bi'
 import { FaTwitter } from 'react-icons/fa'
 import { FaDiscord } from 'react-icons/fa'
-
+// etherum
 import NFT from '../utils/MtChickenNFT.json'
 import { ethers } from 'ethers'
 
@@ -36,7 +35,7 @@ const Home = () => {
   const [walletConnected, setWalletConnected] = React.useState(0)
   const [accounts, setAccount] = React.useState([])
 
-  useEffect(() => {
+  React.useEffect(() => {
     console.log('useEffect 01')
     ethereum = window.ethereum
     console.log('# ethereum:', ethereum)
