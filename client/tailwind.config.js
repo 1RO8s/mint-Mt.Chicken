@@ -6,7 +6,9 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        lily:["Lily Script One"]
+        lily:["Lily Script One"],
+        ubuntu:["Ubuntu"],
+        mplus1:["'M PLUS 1'"]
       }
     },
   },
