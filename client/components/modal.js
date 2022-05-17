@@ -24,8 +24,8 @@ const Modal = ({
 
   const modalContent = {
     background: 'white',
-    padding: '10px',
-    borderRadius: '3px',
+    padding: '20px 20px 0px',
+    borderRadius: '20px',
   }
 
   const overlay = {
@@ -76,12 +76,14 @@ const Modal = ({
           className="flex w-fit flex-col"
           style={modalContent}
         >
+          <div className='flex flex-row justify-end'>
           <VscClose
-            className="rounded hover:bg-slate-200"
+            className="rounded hover:bg-slate-200 border-0 h-6 w-6"
             onClick={closeModal}
           />
-          <div className="flex flex-row">
-            <div className="flex flex-col m-3 w-56">
+          </div>
+          <div className="flex flex-row border-0">
+            <div className="flex flex-col m-0 w-56 border-0">
               <MtChicken
                 {...colors}
                 {...scribbles}
@@ -90,9 +92,9 @@ const Modal = ({
               />
               <img ref={imgElm} className="hidden" />
             </div>
-            <div className="m-3 flex w-56 flex-col p-3 text-center">
-              <div className="flex flex-col font-bold">
-                <span>ミントが完了しました！</span>
+            <div className="m-0 flex w-56 flex-col p-3 text-center border-0">
+              <div className="flex flex-col">
+                <span className='font-mplus1 font-bold'>ミントが完了しました！</span>
                 <span className="font-lily text-sm">
                   Mint has been completed!
                 </span>

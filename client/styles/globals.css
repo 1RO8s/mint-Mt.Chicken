@@ -32,7 +32,7 @@ input:checked ~ .block {
 }
 
 .top-circle {
-  margin: -150px;
+  margin-top: -150px;
   width: 200px;
   height: 200px;
   border-radius: 200px 200px 200px 200px;
