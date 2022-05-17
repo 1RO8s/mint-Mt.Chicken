@@ -27,6 +27,7 @@ const chains = {
 const chain = chains.test
 
 const Home = () => {
+  console.log('# render home')
   //let accounts;
   //const isConneted = accounts == undefined;
 
@@ -34,24 +35,38 @@ const Home = () => {
 
   const [walletConnected, setWalletConnected] = React.useState(0)
   const [accounts, setAccount] = React.useState([])
+  const [connectBtnMsg, setConnectBtnMsg] = React.useState('Connect wallet')
+
+  console.log('#3 accounts:', accounts)
+  //(0 == accounts.length)?setAccount('Connect wal'):setAccount('Connecteddd')
 
   React.useEffect(() => {
-    console.log('useEffect 01')
-    ethereum = window.ethereum
-    console.log('# ethereum:', ethereum)
-    console.log('ethereum.isConnected():', ethereum.isConnected())
+    console.log('useEffect 01');
+    ethereum = window.ethereum;
+    console.log('# ethereum:', ethereum);
+    //console.log('ethereum.isConnected():', ethereum.isConnected());
+
+    ;(async () => {
+      // リロード時にアカウント取得（接続済のみ）
+      const acts = await ethereum.request({ method: 'eth_accounts' })
+      setAccount(acts)
+    })()
 
     // イベント定義
     ethereum.on('accountsChanged', (_accounts) => {
-      console.log('# accountChanged:', accounts)
+      console.log('# accountChanged:', _accounts)
       setAccount(_accounts)
-      if (0 == accounts.length) {
-        setConnectBtnMsg('Connect wallet')
-      } else {
-        setConnectBtnMsg('Connected')
-      }
     })
   }, []) // 初回マウント時
+
+  React.useEffect(() => {
+    //console.log('useEffect 02')
+    if (0 == accounts.length) {
+      setConnectBtnMsg('Connect wallet')
+    } else {
+      setConnectBtnMsg('Connected')
+    }
+  })
 
   // Walletを検出しているかどうか
   const isDetectedWallet = () => {
@@ -65,7 +80,7 @@ const Home = () => {
 
   // 接続しているチェーンが正しいか確認する
   const isValidChain = async () => {
-    console.log("call isValidChain")
+    console.log('call isValidChain')
     ethereum = window.ethereum
     let chainId = await ethereum.request({ method: 'eth_chainId' })
     if (chainId == chain.id) {
@@ -78,9 +93,8 @@ const Home = () => {
     }
   }
 
-  const [connectBtnMsg, setConnectBtnMsg] = React.useState('Connect wallet')
   const connectWallet = async () => {
-    console.log("1. ethereum:",ethereum)
+    console.log('1. ethereum:', ethereum)
     if (!isDetectedWallet()) return
     if (!(await isValidChain())) return
     const accounts = await ethereum.request({ method: 'eth_requestAccounts' })
@@ -97,12 +111,13 @@ const Home = () => {
   const mintChicken = async () => {
     console.log('# mint start')
     ethereum = window.ethereum
+    //setIsLoading(true)
     try {
-      console.log("#1 accounts:",accounts)
       if (!isDetectedWallet) return false
       if (!(await isValidChain())) return false
       if (0 == accounts.length) {
-        alert("ウォレットを接続してください")
+        alert('ウォレットを接続してください')
+        throw 'ウォレットが接続されていません'
         return
       }
 
@@ -114,8 +129,6 @@ const Home = () => {
         NFT.abi,
         signer
       )
-      console.log('# nftContract:', nftContract)
-      console.log('# signer:', signer)
 
       // ミント
       console.log('## colors:', colors)
@@ -156,7 +169,8 @@ const Home = () => {
       setNewItemId(tokenId)
       console.log(`${opensea}/${nftContractAddress}/${tokenId}`)
     } catch (error) {
-      console.log('Error minting character', error)
+      console.log('Error minting character:', error)
+      setIsLoading(false)
       setTxError(error.message)
     }
   }
@@ -195,16 +209,12 @@ const Home = () => {
     tailColor,
     tailShadowColor,
   }
-
   const scribbles = {
     hasForehead,
     hasNose,
     hasCheek,
     hasBerry,
   }
-
-  console.log('colors:')
-  console.log(colors)
 
   // ランダム
   const setRandomColor = () => {
@@ -235,7 +245,7 @@ const Home = () => {
   const openModal = async () => {
     await mintChicken()
     //alert('minted')
-    console.log('3.miningStatus:', miningStatus)
+    //console.log('3.miningStatus:', miningStatus)
     // console.log("# minted:",minted)
     if (miningStatus == 2) {
       setShowModal(true)
@@ -256,7 +266,7 @@ const Home = () => {
           rel="stylesheet"
         />
       </Head>
-      <div className="flex h-screen flex-col  items-center justify-center py-2">
+      <div className="flex h-screen flex-col  items-center justify-center">
         <header
           className="flex-between flex w-full flex-row justify-between"
           style={{ borderBottom: 'solid 10px black' }}
@@ -275,18 +285,18 @@ const Home = () => {
             </span>
           </button>
         </header>
-        <main className="bg-main-color grow-1 flex w-full flex-1 flex-col justify-center overflow-y-scroll px-20 text-center sm:flex-row">
-          <div id="MtChicken" className="flex h-max w-1/2 flex-col">
+        <main className="bg-main-color grow-1 flex w-full flex-1 flex-col justify-center overflow-y-scroll pt-3 text-center sm:flex-row">
+          <div id="MtChicken" className="flex h-max w-1/2 flex-col pl-20">
             <MtChicken {...colors} {...scribbles} bgColor={'#16adff'} />
           </div>
           <div
             id="color-pickers"
-            className="h-full w-1/2 overflow-y-scroll pt-3"
+            className="h-full w-1/2 overflow-y-scroll pr-20"
           >
             <div className="m-3 rounded-xl bg-white p-3">
               <h2 className="mb-1 text-left text-xl">
-                <span className='font-mplus1 font-bold'>色選択</span>
-                <span className="font-ubuntu text-sm mx-2">Color Select</span>
+                <span className="font-mplus1 font-bold">色選択</span>
+                <span className="mx-2 font-ubuntu text-sm">Color Select</span>
               </h2>
               <hr style={{ border: 'solid 1px black' }} />
               <div className="flex flex-wrap">
@@ -378,31 +388,31 @@ const Home = () => {
             </div>
             <div className="m-3 rounded-xl bg-white p-3">
               <h2 className="m-1 text-left text-xl">
-                <span className='font-mplus1 font-bold'>らくがき選択</span>
+                <span className="font-mplus1 font-bold">らくがき選択</span>
                 <span className="mx-2 font-ubuntu text-sm">Doodle Select</span>
               </h2>
               <hr></hr>
               <div className="flex flex-row">
                 <Toggle
-                  title="額の傷"
+                  title="おでこ"
                   ruby="forehead"
                   state={hasForehead}
                   setState={setForehead}
                 />
                 <Toggle
-                  title="頬の傷"
+                  title="ほお"
                   ruby="cheek"
                   state={hasCheek}
                   setState={setCheek}
                 />
                 <Toggle
-                  title="鼻毛"
-                  ruby="nose"
+                  title="ひげ"
+                  ruby="mustache"
                   state={hasNose}
                   setState={setNose}
                 />
                 <Toggle
-                  title="腹の傷"
+                  title="おなか"
                   ruby="belly"
                   state={hasBerry}
                   setState={setBerry}
@@ -411,15 +421,17 @@ const Home = () => {
             </div>
             <div className="my-4 flex flex-row px-1">
               <button
-                className="mx-3 flex w-1/2 place-content-center rounded border-2 border-sky-200 bg-sky-400 hover:bg-sky-300 py-2 px-4 font-bold"
+                className="mx-3 flex w-1/2 place-content-center rounded border-2 border-sky-200 bg-sky-400 py-2 px-4 font-bold hover:bg-sky-300"
                 onClick={setRandomColor}
               >
                 <span className="flex">
-                  <span className="mx-1 flex font-mplus1 text-white">おまかせ</span>
+                  <span className="mx-1 flex font-mplus1 text-white">
+                    おまかせ
+                  </span>
                 </span>
               </button>
               <button
-                className="mx-3 flex w-1/2 place-content-center rounded bg-yellow-300 hover:bg-yellow-200 py-2 px-4 font-bold"
+                className="mx-3 flex w-1/2 place-content-center rounded bg-yellow-300 py-2 px-4 font-bold hover:bg-yellow-200"
                 onClick={openModal}
               >
                 <span className="flex">
@@ -435,9 +447,16 @@ const Home = () => {
                 </span>
               </button>
             </div>
-            <hr style={{ border: 'solid 2px rgba(255, 255, 255, 0.1)',backgroundColor:'rgba(255, 255, 255, 0.4)' }} />
+            <hr
+              style={{
+                border: 'solid 2px rgba(255, 255, 255, 0.1)',
+                backgroundColor: 'rgba(255, 255, 255, 0.4)',
+              }}
+            />
             <div className="my-4 text-left">
-              <span className="font-ubuntu font-bold text-white">Follow us!!</span>
+              <span className="font-ubuntu font-bold text-white">
+                Follow us!!
+              </span>
               <div className="my-2 flex">
                 <a href="https://twitter.com/MtChicken_NFT" target="_blank">
                   <FaTwitter className="my-auto mx-1 text-white" size="2rem" />
