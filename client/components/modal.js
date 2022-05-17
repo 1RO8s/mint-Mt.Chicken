@@ -45,11 +45,6 @@ const Modal = ({
     setShowModal(false)
   }
 
-  console.log('modal.props.colors')
-  console.log(colors)
-  console.log('...colors')
-  console.log({ ...colors })
-
   const mtChickenElement = React.useRef(null)
   const imgElm = React.useRef(null)
   const downloadSVG = (e) => {
@@ -142,7 +137,7 @@ const Modal = ({
       </div>
     )
   } else {
-    console.log('#close modal')
+    //console.log('#close modal')
     return <></>
   }
 }

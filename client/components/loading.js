@@ -1,12 +1,7 @@
 import React from "react";
 import ReactLoading from "react-loading";
 
-const Loading = ({ isLoading}) => {
-  const modalContent = {
-    background: 'white',
-    padding: '10px',
-    borderRadius: '3px',
-  }
+const Loading = ({isLoading, message}) => {
 
   const overlay = {
     position: 'fixed',
@@ -38,7 +33,6 @@ const Loading = ({ isLoading}) => {
       </div>
     )
   } else {
-    console.log('# finish loading!!')
     return <></>
   }
 }
