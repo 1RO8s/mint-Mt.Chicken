@@ -41,9 +41,9 @@ const Home = () => {
   //(0 == accounts.length)?setAccount('Connect wal'):setAccount('Connecteddd')
 
   React.useEffect(() => {
-    console.log('useEffect 01');
-    ethereum = window.ethereum;
-    console.log('# ethereum:', ethereum);
+    console.log('useEffect 01')
+    ethereum = window.ethereum
+    console.log('# ethereum:', ethereum)
     //console.log('ethereum.isConnected():', ethereum.isConnected());
 
     ;(async () => {
@@ -271,27 +271,33 @@ const Home = () => {
           className="flex-between flex w-full flex-row justify-between"
           style={{ borderBottom: 'solid 10px black' }}
         >
-          <h2 className="m-auto mx-28 align-middle font-lily text-3xl text-sky-400">
-            Mt.Chicken
-          </h2>
-          <div className="top-circle"></div>
-          <button
-            className="m-5 rounded bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-400"
-            onClick={connectWallet}
-          >
-            <span className="flex font-ubuntu">
-              <BiWalletAlt className="my-auto mx-1" />
-              <span>{connectBtnMsg}</span>
-            </span>
-          </button>
+          <div className='w-1/3 flex justify-start'>
+            <h2 className="m-auto align-middle font-lily text-3xl text-sky-400">
+              Mt.Chicken
+            </h2>
+          </div>
+          <div className='w-1/3 flex justify-center'>
+            <div className="top-circle" />
+          </div>
+          <div className='w-1/3 flex justify-end pr-10'>
+            <button
+              className="m-5 rounded bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-400"
+              onClick={connectWallet}
+            >
+              <span className="flex font-ubuntu">
+                <BiWalletAlt className="my-auto mx-1" />
+                <span>{connectBtnMsg}</span>
+              </span>
+            </button>
+          </div>
         </header>
         <main className="bg-main-color grow-1 flex w-full flex-1 flex-col justify-center overflow-y-scroll pt-3 text-center sm:flex-row">
-          <div id="MtChicken" className="flex h-max w-1/2 flex-col pl-20">
+          <div id="MtChicken" className="flex h-max w-1/2 flex-col pl-10">
             <MtChicken {...colors} {...scribbles} bgColor={'#16adff'} />
           </div>
           <div
             id="color-pickers"
-            className="h-full w-1/2 overflow-y-scroll pr-20"
+            className="h-full w-1/2 overflow-y-scroll pr-10"
           >
             <div className="m-3 rounded-xl bg-white p-3">
               <h2 className="mb-1 text-left text-xl">
