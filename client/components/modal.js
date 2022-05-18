@@ -18,8 +18,8 @@ const Modal = ({
   tokenId,
 }) => {
   const osUrl = `${opensea}/${nftContractAddress}/${tokenId}`
-  const intent = `https://twitter.com/intent/tweet?text=${encodeURI(
-    'ミントが完了しました！\n' + osUrl
+  const intent = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+    `ミントが完了しました！\n#MtChicken\n${osUrl}`
   )}`
 
   const modalContent = {

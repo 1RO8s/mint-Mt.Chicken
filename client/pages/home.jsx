@@ -27,7 +27,6 @@ const chains = {
 const chain = chains.test
 
 const Home = () => {
-  console.log('# render home')
   //let accounts;
   //const isConneted = accounts == undefined;
 
@@ -37,15 +36,14 @@ const Home = () => {
   const [accounts, setAccount] = React.useState([])
   const [connectBtnMsg, setConnectBtnMsg] = React.useState('Connect wallet')
 
-  console.log('#3 accounts:', accounts)
+  //console.log('#3 accounts:', accounts)
   //(0 == accounts.length)?setAccount('Connect wal'):setAccount('Connecteddd')
 
   React.useEffect(() => {
-    console.log('useEffect 01')
-    ethereum = window.ethereum
-    console.log('# ethereum:', ethereum)
-    //console.log('ethereum.isConnected():', ethereum.isConnected());
+    //console.log('useEffect 01')
 
+    if (!isDetectedWallet()) return
+    ethereum = window.ethereum
     ;(async () => {
       // リロード時にアカウント取得（接続済のみ）
       const acts = await ethereum.request({ method: 'eth_accounts' })
@@ -54,7 +52,7 @@ const Home = () => {
 
     // イベント定義
     ethereum.on('accountsChanged', (_accounts) => {
-      console.log('# accountChanged:', _accounts)
+      //console.log('# accountChanged:', _accounts)
       setAccount(_accounts)
     })
   }, []) // 初回マウント時
@@ -80,11 +78,11 @@ const Home = () => {
 
   // 接続しているチェーンが正しいか確認する
   const isValidChain = async () => {
-    console.log('call isValidChain')
+    //console.log('call isValidChain')
     ethereum = window.ethereum
     let chainId = await ethereum.request({ method: 'eth_chainId' })
     if (chainId == chain.id) {
-      console.log('Connected to chain:' + chainId)
+      //console.log('Connected to chain:' + chainId)
       return true
     } else {
       //alert('You are not connected to the Mumbai Testnet!')
@@ -94,8 +92,11 @@ const Home = () => {
   }
 
   const connectWallet = async () => {
-    console.log('1. ethereum:', ethereum)
-    if (!isDetectedWallet()) return
+    //console.log('1. ethereum:', ethereum)
+    if (!isDetectedWallet()) {
+      alert('ウォレットが見つかりませんでした')
+      return
+    }
     if (!(await isValidChain())) return
     const accounts = await ethereum.request({ method: 'eth_requestAccounts' })
   }
@@ -109,11 +110,14 @@ const Home = () => {
 
   // ミント実行
   const mintChicken = async () => {
-    console.log('# mint start')
+    console.log('preparing mint...')
     ethereum = window.ethereum
-    //setIsLoading(true)
+    setIsLoading(true)
     try {
-      if (!isDetectedWallet) return false
+      if (!isDetectedWallet()) {
+        alert('ウォレットが見つかりませんでした')
+        return false
+      }
       if (!(await isValidChain())) return false
       if (0 == accounts.length) {
         alert('ウォレットを接続してください')
@@ -122,6 +126,7 @@ const Home = () => {
       }
 
       // コントラクト取得
+      console.log('getting contract...')
       const provider = new ethers.providers.Web3Provider(ethereum)
       const signer = provider.getSigner()
       const nftContract = new ethers.Contract(
@@ -131,45 +136,46 @@ const Home = () => {
       )
 
       // ミント
-      console.log('## colors:', colors)
+      //console.log('## colors:', colors)
       const hexToInt = (s) => parseInt(s, 16)
+      const hex2Colors = [
+        hexToInt(outlineColor.slice(1, 7)), // outline
+        hexToInt(tosakaColor.slice(1, 7)), // cockscomb
+        hexToInt(eyeColor.slice(1, 7)), // eyes
+        hexToInt(headColor.slice(1, 7)), // face
+        hexToInt(headShadowColor.slice(1, 7)), // face shadow
+        hexToInt(bodyColor.slice(1, 7)), // body
+        hexToInt(bodyShadowColor.slice(1, 7)), // body shadow
+        hexToInt(tailColor.slice(1, 7)), // tail
+        hexToInt(tailShadowColor.slice(1, 7)), // tail shadow
+        hexToInt(moustacheColor.slice(1, 7)), // wattle
+        hexToInt(beakColor.slice(1, 7)), // beak
+        hexToInt(footColor.slice(1, 7)), // foot
+      ];
+      console.log('minting...')
       let nftTx = await nftContract.mint(
-        [
-          hexToInt(outlineColor.slice(1, 7)), // outline
-          hexToInt(tosakaColor.slice(1, 7)), // cockscomb
-          hexToInt(eyeColor.slice(1, 7)), // eyes
-          hexToInt(headColor.slice(1, 7)), // face
-          hexToInt(headShadowColor.slice(1, 7)), // face shadow
-          hexToInt(bodyColor.slice(1, 7)), // body
-          hexToInt(bodyShadowColor.slice(1, 7)), // body shadow
-          hexToInt(tailColor.slice(1, 7)), // tail
-          hexToInt(tailShadowColor.slice(1, 7)), // tail shadow
-          hexToInt(moustacheColor.slice(1, 7)), // wattle
-          hexToInt(beakColor.slice(1, 7)), // beak
-          hexToInt(footColor.slice(1, 7)), // foot
-        ],
+        hex2Colors,
         [hasForehead, hasNose, hasCheek, hasBerry]
       )
-      console.log('minting...', nftTx.hash)
+      console.log('waiting tx...', nftTx.hash)
       setMiningStatus(1)
-      console.log('1.miningStatus:', miningStatus)
 
       // wait()が終わるまでローディング表示
       setIsLoading(true)
 
       let tx = await nftTx.wait()
-      console.log('Minted!', tx)
+      console.log('minted: ', tx)
       setMiningStatus(2)
       setIsLoading(false)
-      console.log('2.miningStatus:', miningStatus)
+      //console.log('2.miningStatus:', miningStatus)
 
       let event = tx.events[0]
       let value = event.args[2]
       let tokenId = value.toNumber()
       setNewItemId(tokenId)
-      console.log(`${opensea}/${nftContractAddress}/${tokenId}`)
+      //console.log(`${opensea}/${nftContractAddress}/${tokenId}`)
     } catch (error) {
-      console.log('Error minting character:', error)
+      console.error('Error minting character:', error)
       setIsLoading(false)
       setTxError(error.message)
     }
@@ -244,9 +250,6 @@ const Home = () => {
   const [showModal, setShowModal] = React.useState(false)
   const openModal = async () => {
     await mintChicken()
-    //alert('minted')
-    //console.log('3.miningStatus:', miningStatus)
-    // console.log("# minted:",minted)
     if (miningStatus == 2) {
       setShowModal(true)
     } else {
@@ -291,7 +294,7 @@ const Home = () => {
             </button>
           </div>
         </header>
-        <main className="bg-main-color grow-1 flex w-full flex-1 flex-col justify-center overflow-y-scroll pt-3 text-center sm:flex-row">
+        <main className="bg-main-color grow-1 flex w-full flex-1 flex-col justify-center overflow-y-scroll text-center sm:flex-row">
           <div id="MtChicken" className="flex h-max w-1/2 flex-col pl-10">
             <MtChicken {...colors} {...scribbles} bgColor={'#16adff'} />
           </div>
