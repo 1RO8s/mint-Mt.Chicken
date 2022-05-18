@@ -17,7 +17,7 @@ const Loading = ({isLoading, message}) => {
   }
 
   if (isLoading) {
-    console.log('# Now loading...')
+    //console.log('# Now loading...')
     return (
       <div
         id="overlay"

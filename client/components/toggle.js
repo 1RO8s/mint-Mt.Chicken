@@ -2,7 +2,6 @@ const Toggle = ({ title, ruby, state, setState }) => {
   
   const switchToggle = () => {
     setState(!state)
-    console.log(`## state:${state}`)
   }
 
   return (
