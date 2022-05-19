@@ -27,20 +27,12 @@ const chains = {
 const chain = chains.test
 
 const Home = () => {
-  //let accounts;
-  //const isConneted = accounts == undefined;
 
   let ethereum
-
-  const [walletConnected, setWalletConnected] = React.useState(0)
   const [accounts, setAccount] = React.useState([])
   const [connectBtnMsg, setConnectBtnMsg] = React.useState('Connect wallet')
 
-  //console.log('#3 accounts:', accounts)
-  //(0 == accounts.length)?setAccount('Connect wal'):setAccount('Connecteddd')
-
   React.useEffect(() => {
-    //console.log('useEffect 01')
 
     if (!isDetectedWallet()) return
     ethereum = window.ethereum
@@ -52,17 +44,22 @@ const Home = () => {
 
     // イベント定義
     ethereum.on('accountsChanged', (_accounts) => {
-      //console.log('# accountChanged:', _accounts)
       setAccount(_accounts)
     })
   }, []) // 初回マウント時
 
   React.useEffect(() => {
-    //console.log('useEffect 02')
+    // 
     if (0 == accounts.length) {
       setConnectBtnMsg('Connect wallet')
     } else {
       setConnectBtnMsg('Connected')
+    }
+    // mint後のモーダル表示
+    if (miningStatus == 2) {
+      setShowModal(true)
+    } else {
+      setShowModal(false)
     }
   })
 
@@ -103,10 +100,9 @@ const Home = () => {
 
   const [txError, setTxError] = React.useState(null)
   const [miningStatus, setMiningStatus] = React.useState(0) // 0:before mint 1:minting, 2:minted
-  //const [loadingState, setLoadingState] = React.useState(0) // 0:loading, 1:loaded
-  //const [isMinting, setIsMinting] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(false)
   const [newItemId, setNewItemId] = React.useState(null)
+  //console.log('#1 miningStatus',miningStatus)
 
   // ミント実行
   const mintChicken = async () => {
@@ -159,6 +155,7 @@ const Home = () => {
       )
       console.log('waiting tx...', nftTx.hash)
       setMiningStatus(1)
+      //console.log('#2 miningStatus',miningStatus)
 
       // wait()が終わるまでローディング表示
       setIsLoading(true)
@@ -167,7 +164,7 @@ const Home = () => {
       console.log('minted: ', tx)
       setMiningStatus(2)
       setIsLoading(false)
-      //console.log('2.miningStatus:', miningStatus)
+      //console.log('#3 miningStatus:', miningStatus)
 
       let event = tx.events[0]
       let value = event.args[2]
@@ -250,11 +247,6 @@ const Home = () => {
   const [showModal, setShowModal] = React.useState(false)
   const openModal = async () => {
     await mintChicken()
-    if (miningStatus == 2) {
-      setShowModal(true)
-    } else {
-      setShowModal(false)
-    }
   }
 
   return (
@@ -492,6 +484,7 @@ const Home = () => {
       <Modal
         showModal={showModal}
         setShowModal={setShowModal}
+        setMiningStatus={setMiningStatus}
         colors={colors}
         scribbles={scribbles}
         tokenId={newItemId}
