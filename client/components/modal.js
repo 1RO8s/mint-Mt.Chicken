@@ -12,11 +12,13 @@ const opensea = 'https://testnets.opensea.io/assets/mumbai' // testnet
 const Modal = ({
   showModal,
   setShowModal,
+  setMiningStatus,
   colors,
   scribbles,
   bgColor,
   tokenId,
 }) => {
+  //console.log('# render modal:',showModal)
   const osUrl = `${opensea}/${nftContractAddress}/${tokenId}`
   const intent = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
     `ミントが完了しました！\n#MtChicken\n${osUrl}`
@@ -43,13 +45,12 @@ const Modal = ({
 
   const closeModal = () => {
     setShowModal(false)
+    setMiningStatus(0)
   }
 
   const mtChickenElement = React.useRef(null)
   const imgElm = React.useRef(null)
   const downloadSVG = (e) => {
-    console.log('download svg!')
-    console.log(mtChickenElement)
 
     // SCGをBlob化したあとURL生成
     const svgText = new XMLSerializer().serializeToString(
@@ -68,7 +69,6 @@ const Modal = ({
   }
 
   if (showModal) {
-    console.log('#open modal')
     return (
       <div id="overlay" className="fixed bg-gray-300" style={overlay}>
         <div
@@ -139,7 +139,6 @@ const Modal = ({
       </div>
     )
   } else {
-    //console.log('#close modal')
     return <></>
   }
 }
