@@ -12,19 +12,8 @@ import { BiWalletAlt } from 'react-icons/bi'
 import { FaTwitter } from 'react-icons/fa'
 import { FaDiscord } from 'react-icons/fa'
 // etherum
-import NFT from '../utils/MtChickenNFT.json'
 import { ethers } from 'ethers'
-
-const nftContractAddress = '0x865ccbfe3cac3ce0834c006c2581c08fd5ebc468'
-const opensea = 'https://testnets.opensea.io/assets/mumbai' // testnet
-//const opensea = 'https://opensea.io/assets/matic' // production
-
-const chains = {
-  main: { name: 'matic', id: '' },
-  test: { name: 'mumbai', id: '0x13881' },
-}
-
-const chain = chains.test
+import { CONTRACT_ADDRESS, CHAIN, NFT } from '../config'
 
 const Home = () => {
 
@@ -50,11 +39,19 @@ const Home = () => {
 
   React.useEffect(() => {
     // 
-    if (0 == accounts.length) {
-      setConnectBtnMsg('Connect wallet')
-    } else {
-      setConnectBtnMsg('Connected')
-    }
+    if (!isDetectedWallet()) return
+    ethereum = window.ethereum
+    ;(async () => {
+      // リロード時にアカウント取得（接続済のみ）
+      const _accounts = await ethereum.request({ method: 'eth_accounts' })
+      console.log('_accounts:',_accounts)
+      if (0 == _accounts.length) {
+        setConnectBtnMsg('Connect wallet')
+      } else {
+        setConnectBtnMsg('Connected')
+      }
+    })()
+    
     // mint後のモーダル表示
     if (miningStatus == 2) {
       setShowModal(true)
@@ -78,12 +75,12 @@ const Home = () => {
     //console.log('call isValidChain')
     ethereum = window.ethereum
     let chainId = await ethereum.request({ method: 'eth_chainId' })
-    if (chainId == chain.id) {
+    if (chainId == CHAIN.id) {
       //console.log('Connected to chain:' + chainId)
       return true
     } else {
       //alert('You are not connected to the Mumbai Testnet!')
-      alert(`${chain.name}チェーンに接続してください`)
+      alert(`${CHAIN.name}チェーンに接続してください`)
       return false
     }
   }
@@ -112,12 +109,14 @@ const Home = () => {
     try {
       if (!isDetectedWallet()) {
         alert('ウォレットが見つかりませんでした')
+        throw 'Wallet not found'
         return false
       }
-      if (!(await isValidChain())) return false
-      if (0 == accounts.length) {
+      if (!(await isValidChain())) throw 'invalid chain'
+      const _accounts = await ethereum.request({ method: 'eth_accounts' })
+      if (0 == _accounts.length) {
         alert('ウォレットを接続してください')
-        throw 'ウォレットが接続されていません'
+        throw 'Wallet not connected'
         return
       }
 
@@ -126,7 +125,7 @@ const Home = () => {
       const provider = new ethers.providers.Web3Provider(ethereum)
       const signer = provider.getSigner()
       const nftContract = new ethers.Contract(
-        nftContractAddress,
+        CONTRACT_ADDRESS,
         NFT.abi,
         signer
       )
@@ -170,7 +169,7 @@ const Home = () => {
       let value = event.args[2]
       let tokenId = value.toNumber()
       setNewItemId(tokenId)
-      //console.log(`${opensea}/${nftContractAddress}/${tokenId}`)
+
     } catch (error) {
       console.error('Error minting character:', error)
       setIsLoading(false)
