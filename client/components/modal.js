@@ -4,10 +4,7 @@ import { FaTwitter } from 'react-icons/fa'
 import { VscClose } from 'react-icons/vsc'
 import { HiOutlineDownload as DownloadIcon } from 'react-icons/hi'
 import MtChicken from './mtChicken'
-
-const nftContractAddress = '0x865ccbfe3cac3ce0834c006c2581c08fd5ebc468'
-const opensea = 'https://testnets.opensea.io/assets/mumbai' // testnet
-//const opensea = 'https://opensea.io/assets/matic'
+import { CONTRACT_ADDRESS, OPENSEA_URL} from '../config'
 
 const Modal = ({
   showModal,
@@ -19,7 +16,7 @@ const Modal = ({
   tokenId,
 }) => {
   //console.log('# render modal:',showModal)
-  const osUrl = `${opensea}/${nftContractAddress}/${tokenId}`
+  const osUrl = `${OPENSEA_URL}/${CONTRACT_ADDRESS}/${tokenId}`
   const intent = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
     `ミントが完了しました！\n#MtChicken\n${osUrl}`
   )}`
