@@ -15,14 +15,13 @@ function MyApp({ Component, pageProps }: AppProps) {
     console.log(`process.env.${key}: ${process.env[key]}`)
   });
 
-
-
-  const GA_ID = process.env.GA_TRACKING_ID
-  console.log("GA_ID",GA_ID)
   console.log("NEXT_PUBLIC_VERCEL_ENV:",process.env.NEXT_PUBLIC_VERCEL_ENV)
-  console.log("process.env.NODE_ENV:",process.env.NODE_ENV)
+  console.log("NODE_ENV:",process.env.NODE_ENV)
   console.log("VERCEL_ENV:",process.env.VERCEL_ENV)
+  console.log("GA_TRACKING_ID:",process.env.GA_TRACKING_ID)
   console.log("NEXT_GA_TRACKING_ID:",process.env.NEXT_GA_TRACKING_ID)
+  console.log("NEXT_PUBLIC_GA_TRACKING_ID:",process.env.NEXT_PUBLIC_GA_TRACKING_ID)
+  console.log("NEXT_PUBLIC_VERCEL_GA_TRACKING_ID:",process.env.NEXT_PUBLIC_VERCEL_GA_TRACKING_ID)
 
   useEffect(() => {
     if (!existsGaId) return
