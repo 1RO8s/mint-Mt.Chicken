@@ -1,7 +1,7 @@
 export const GA_TRACKING_ID = process.env.GA_TRACKING_ID
 
 // IDが取得できない場合を想定する
-export const existsGaId = GA_TRACKING_ID !== ''
+export const existsGaId = GA_TRACKING_ID != undefined && GA_TRACKING_ID != ''
 
 // https://developers.google.com/analytics/devguides/collection/gtagjs/pages
 export const pageview = (url) => {

@@ -2,9 +2,10 @@ import '../styles/globals.css'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
 import { useRouter } from "next/router";
-import GoogleAnalytics from '../components/GoogleAnalytics'
+//import GoogleAnalytics from '../components/GoogleAnalytics'
+import Script from 'next/script'
 import { useEffect } from 'react'
-import { existsGaId, pageview } from '../utils/gtag'
+import { existsGaId, pageview, GA_TRACKING_ID } from '../utils/gtag'
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter()
@@ -34,7 +35,24 @@ function MyApp({ Component, pageProps }: AppProps) {
           href="https://fonts.googleapis.com/css2?family=Lily+Script+One&family=M+PLUS+1:wght@400;500;700&family=Ubuntu:wght@400;700&display=swap"
           rel="stylesheet"
         />
-        <GoogleAnalytics/>
+        <meta property="ga-id" content={GA_TRACKING_ID} />
+        {existsGaId && (
+        <>
+          <Script
+            defer
+            src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
+            strategy="afterInteractive"
+          />
+          <Script id="ga" defer strategy="afterInteractive">
+            {`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());    
+              gtag('config', '${GA_TRACKING_ID}');
+          `}
+          </Script>
+        </>
+      )}
       </Head>
       <Component {...pageProps} />
     </>
