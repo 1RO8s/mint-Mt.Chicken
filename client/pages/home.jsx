@@ -250,16 +250,6 @@ const Home = () => {
 
   return (
     <>
-      <Head>
-        <title>Mt.Chicken</title>
-        <link rel="icon" href="/mt-chicken.png" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Lily+Script+One&family=M+PLUS+1:wght@400;500;700&family=Ubuntu:wght@400;700&display=swap"
-          rel="stylesheet"
-        />
-      </Head>
       <div className="flex h-screen flex-col  items-center justify-center">
         <header
           className="flex-between flex w-full flex-row justify-between"
