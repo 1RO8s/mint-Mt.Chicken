@@ -10,10 +10,7 @@ import { existsGaId, pageview, GA_TRACKING_ID } from '../utils/gtag'
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter()
 
-  console.log('# process.env')
-  Object.keys(process.env).sort().forEach(key => {
-    console.log(`process.env.${key}: ${process.env[key]}`)
-  });
+  console.log('existsGaId:',existsGaId)
 
   console.log("NEXT_PUBLIC_VERCEL_ENV:",process.env.NEXT_PUBLIC_VERCEL_ENV)
   console.log("NODE_ENV:",process.env.NODE_ENV)
@@ -49,6 +46,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           rel="stylesheet"
         />
         <meta property="ga-id" content={GA_TRACKING_ID} />
+        <meta property="gais" content={`gais-${existsGaId}`} />
         {existsGaId && (
         <>
           <Script
