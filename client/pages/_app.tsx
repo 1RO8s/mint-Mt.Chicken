@@ -10,6 +10,10 @@ import { existsGaId, pageview, GA_TRACKING_ID } from '../utils/gtag'
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter()
 
+  console.log("process.env:",process.env)
+  const GA_ID = process.env.GA_TRACKING_ID
+  console.log("GA_ID",GA_ID)
+
   useEffect(() => {
     if (!existsGaId) return
 
