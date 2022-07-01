@@ -45,7 +45,7 @@ const Header = ({btnState:{connectBtnMsg,setConnectBtnMsg}}) => {
       </div>
       <div className="flex w-1/3 pr-2 sm:pr-16 items-center justify-end">
         <Button onClick={connectWallet}>
-          <BiWalletAlt className="my-auto mx-1 hidden" />
+          <BiWalletAlt className="my-auto mx-1 hidden sm:block" />
           <span>{connectBtnMsg}</span>
         </Button>
         
