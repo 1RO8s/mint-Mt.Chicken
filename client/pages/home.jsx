@@ -1,28 +1,19 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import React from 'react'
-// コンポーネント
 import MtChicken from '../components/mtChicken'
-//import Toggle from '../components/toggle'
-//import ColorPicker from '../components/color-picker'
 import Modal from '../components/modal'
 import Loading from '../components/loading'
 import Header from '../components/layout/Header'
-
 import ColorSelector from '../components/organisms/ColorSelector'
 import DoodleSelector from '../components/organisms/DoodleSelector'
-
-// アイコン
-import { BiWalletAlt } from 'react-icons/bi'
 import { FaTwitter } from 'react-icons/fa'
 import { FaDiscord } from 'react-icons/fa'
-// etherum
 import { ethers } from 'ethers'
 import { CONTRACT_ADDRESS, CHAIN, NFT } from '../config'
 
 const Home = () => {
   let ethereum
-  const [accounts, setAccount] = React.useState([])
   const [connectBtnMsg, setConnectBtnMsg] = React.useState('Connect wallet')
 
   // 初回マウント時の副作用
