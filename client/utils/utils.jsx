@@ -2,7 +2,7 @@ import { CHAIN } from '../config'
 
 // Walletを検出しているかどうか
 export const isDetectedWallet = () => {
-  ethereum = window.ethereum
+  const ethereum = window.ethereum
   if (ethereum && ethereum.isConnected()) {
     return true
   } else {
@@ -13,7 +13,7 @@ export const isDetectedWallet = () => {
 // 接続しているチェーンが正しいか確認する
 export const isValidChain = async () => {
   //console.log('call isValidChain')
-  ethereum = window.ethereum
+  const ethereum = window.ethereum
   let chainId = await ethereum.request({ method: 'eth_chainId' })
   if (chainId == CHAIN.id) {
     //console.log('Connected to chain:' + chainId)
