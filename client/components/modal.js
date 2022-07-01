@@ -79,7 +79,7 @@ const Modal = ({
             onClick={closeModal}
           />
           </div>
-          <div className="flex flex-row border-0">
+          <div className="flex flex-col sm:flex-row border-0">
             <div className="flex flex-col m-0 w-56 border-0">
               <MtChicken
                 {...colors}
