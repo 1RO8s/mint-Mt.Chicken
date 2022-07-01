@@ -13,41 +13,41 @@ import { ethers } from 'ethers'
 import { CONTRACT_ADDRESS, CHAIN, NFT } from '../config'
 
 const Home = () => {
+
   let ethereum
   const [connectBtnMsg, setConnectBtnMsg] = React.useState('Connect wallet')
 
-  // 初回マウント時の副作用
   React.useEffect(() => {
+
     if (!isDetectedWallet()) return
     ethereum = window.ethereum
     ;(async () => {
       // リロード時にアカウント取得（接続済のみ）
       const acts = await ethereum.request({ method: 'eth_accounts' })
-      //setAccount(acts)
+      setAccount(acts)
     })()
 
     // イベント定義
     ethereum.on('accountsChanged', (_accounts) => {
-      //setAccount(_accounts)
+      setAccount(_accounts)
     })
-  }, [])
+  }, []) // 初回マウント時
 
-  // マウント時の副作用
   React.useEffect(() => {
-    //
+    // 
     if (!isDetectedWallet()) return
     ethereum = window.ethereum
     ;(async () => {
       // リロード時にアカウント取得（接続済のみ）
       const _accounts = await ethereum.request({ method: 'eth_accounts' })
-      console.log('_accounts:', _accounts)
+      console.log('_accounts:',_accounts)
       if (0 == _accounts.length) {
         setConnectBtnMsg('Connect wallet')
       } else {
         setConnectBtnMsg('Connected')
       }
     })()
-
+    
     // mint後のモーダル表示
     if (miningStatus == 2) {
       setShowModal(true)
@@ -120,7 +120,11 @@ const Home = () => {
       console.log('getting contract...')
       const provider = new ethers.providers.Web3Provider(ethereum)
       const signer = provider.getSigner()
-      const nftContract = new ethers.Contract(CONTRACT_ADDRESS, NFT.abi, signer)
+      const nftContract = new ethers.Contract(
+        CONTRACT_ADDRESS,
+        NFT.abi,
+        signer
+      )
 
       // ミント
       //console.log('## colors:', colors)
@@ -138,14 +142,12 @@ const Home = () => {
         hexToInt(moustacheColor.slice(1, 7)), // wattle
         hexToInt(beakColor.slice(1, 7)), // beak
         hexToInt(footColor.slice(1, 7)), // foot
-      ]
+      ];
       console.log('minting...')
-      let nftTx = await nftContract.mint(hex2Colors, [
-        hasForehead,
-        hasNose,
-        hasCheek,
-        hasBerry,
-      ])
+      let nftTx = await nftContract.mint(
+        hex2Colors,
+        [hasForehead, hasNose, hasCheek, hasBerry]
+      )
       console.log('waiting tx...', nftTx.hash)
       setMiningStatus(1)
       //console.log('#2 miningStatus',miningStatus)
@@ -163,6 +165,7 @@ const Home = () => {
       let value = event.args[2]
       let tokenId = value.toNumber()
       setNewItemId(tokenId)
+
     } catch (error) {
       console.error('Error minting character:', error)
       setIsLoading(false)
@@ -204,115 +207,12 @@ const Home = () => {
     tailColor,
     tailShadowColor,
   }
-
-  const pickersInfo = [
-    {
-      title: 'アウトライン',
-      ruby: 'Outline',
-      color: outlineColor,
-      setColor: setOutlineColor,
-    },
-    {
-      title: 'とさか',
-      ruby: 'Cockscomb',
-      color: tosakaColor,
-      setColor: setTosakaColor,
-    },
-    {
-      title: 'め',
-      ruby: 'Eyes',
-      color: eyeColor,
-      setColor: setEyeColor,
-    },
-    {
-      title: 'かお',
-      ruby: 'Face',
-      color: headColor,
-      setColor: setHeadColor,
-    },
-    {
-      title: 'かおの影',
-      ruby: 'Face shadow',
-      color: headShadowColor,
-      setColor: setHeadShadowColor,
-    },
-    {
-      title: 'からだ',
-      ruby: 'Body',
-      color: bodyColor,
-      setColor: setBodyColor,
-    },
-    {
-      title: 'からだの影',
-      ruby: 'Body shadow',
-      color: bodyShadowColor,
-      setColor: setBodyShadowColor,
-    },
-    {
-      title: 'しっぽ',
-      ruby: 'Tail',
-      color: tailColor,
-      setColor: setTailColor,
-    },
-    {
-      title: 'しっぽの影',
-      ruby: 'Tail shadow',
-      color: tailShadowColor,
-      setColor: setTailShadowColor,
-    },
-    {
-      title: 'にくぜん',
-      ruby: 'Wattle',
-      color: moustacheColor,
-      setColor: setMoustacheColor,
-    },
-    {
-      title: 'くちばし',
-      ruby: 'Beak',
-      color: beakColor,
-      setColor: setBeakColor,
-    },
-    {
-      title: 'あし',
-      ruby: 'Foot',
-      color: footColor,
-      setColor: setFootColor,
-    },
-  ]
-
   const scribbles = {
     hasForehead,
     hasNose,
     hasCheek,
     hasBerry,
   }
-
-  const doodlesInfo = [
-    {
-      title: 'おでこ',
-      ruby: 'foreahead',
-      state: hasForehead,
-      setState: setForehead,
-    },
-    {
-      title: 'ほお',
-      ruby: 'cheek',
-      state: hasCheek,
-      setState: setCheek,
-    },
-    {
-      title: 'ひげ',
-      ruby: 'mustache',
-      state: hasNose,
-      setState: setNose,
-    },
-    {
-      title: 'おなか',
-      ruby: 'berry',
-      state: hasBerry,
-      setState: setBerry,
-    }
-  ]
 
   // ランダム
   const setRandomColor = () => {
@@ -346,34 +246,168 @@ const Home = () => {
 
   return (
     <>
-      <Head>
-        <title>Mt.Chicken</title>
-        <link rel="icon" href="/mt-chicken.png" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Lily+Script+One&family=M+PLUS+1:wght@400;500;700&family=Ubuntu:wght@400;700&display=swap"
-          rel="stylesheet"
-        />
-      </Head>
-      <div className="sm:flex h-screen flex-col  items-center justify-center">
-        <Header btnState={{
-          connectBtnMsg,
-          setConnectBtnMsg
-        }}/>
-        <main className="bg-main-color grow-1 flex w-full flex-1 justify-center overflow-y-scroll text-center flex-col sm:flex-row">
-          <div id="MtChicken" className="flex h-max w-full sm:w-1/2 flex-col mt-[-50px] sm:pl-10">
+      <div className="flex h-screen flex-col  items-center justify-center">
+        <header
+          className="flex-between flex w-full flex-row justify-between"
+          style={{ borderBottom: 'solid 10px black' }}
+        >
+          <div className='w-1/3 flex justify-start'>
+            <h2 className="m-auto align-middle font-lily text-3xl text-sky-400">
+              Mt.Chicken
+            </h2>
+          </div>
+          <div className='w-1/3 flex justify-center'>
+            <div className="top-circle" />
+          </div>
+          <div className='w-1/3 flex justify-end pr-10'>
+            <button
+              className="m-5 rounded bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-400"
+              onClick={connectWallet}
+            >
+              <span className="flex font-ubuntu">
+                <BiWalletAlt className="my-auto mx-1" />
+                <span>{connectBtnMsg}</span>
+              </span>
+            </button>
+          </div>
+        </header>
+        <main className="bg-main-color grow-1 flex w-full flex-1 flex-col justify-center overflow-y-scroll text-center sm:flex-row">
+          <div id="MtChicken" className="flex h-max w-1/2 flex-col pl-10">
             <MtChicken {...colors} {...scribbles} bgColor={'#16adff'} />
           </div>
           <div
-            id="selectors"
-            className="h-full w-full sm:w-1/2 overflow-y-scroll sm:pr-10"
+            id="color-pickers"
+            className="h-full w-1/2 overflow-y-scroll pr-10"
           >
-            <ColorSelector pickersInfo={pickersInfo} />
-            <DoodleSelector doodlesInfo={doodlesInfo}/>
-            <div className="my-4 flex flex-col sm:flex-row px-1">
+            <div className="m-3 rounded-xl bg-white p-3">
+              <h2 className="mb-1 text-left text-xl">
+                <span className="font-mplus1 font-bold">色選択</span>
+                <span className="mx-2 font-ubuntu text-sm">Color Select</span>
+              </h2>
+              <hr style={{ border: 'solid 1px black' }} />
+              <div className="flex flex-wrap">
+                <ColorPicker
+                  title="アウトライン"
+                  ruby="Outline"
+                  color={outlineColor}
+                  setColor={setOutlineColor}
+                  initialValue="#999"
+                />
+                <ColorPicker
+                  title="とさか"
+                  ruby="Cockscomb"
+                  color={tosakaColor}
+                  setColor={setTosakaColor}
+                  initialValue="#b3b3b3"
+                />
+                <ColorPicker
+                  title="め"
+                  ruby="Eyes"
+                  color={eyeColor}
+                  setColor={setEyeColor}
+                  initialValue="#999"
+                />
+                <ColorPicker
+                  title="かお"
+                  ruby="Face"
+                  color={headColor}
+                  setColor={setHeadColor}
+                  initialValue="#fff"
+                />
+                <ColorPicker
+                  title="かおの影"
+                  ruby="Face shadow"
+                  color={headShadowColor}
+                  setColor={setHeadShadowColor}
+                  initialValue="#ccc"
+                />
+                <ColorPicker
+                  title="からだ"
+                  ruby="Body"
+                  color={bodyColor}
+                  setColor={setBodyColor}
+                  initialValue="#e6e6e6"
+                />
+                <ColorPicker
+                  title="からだの影"
+                  ruby="Body shadow"
+                  color={bodyShadowColor}
+                  setColor={setBodyShadowColor}
+                  initialValue="#b3b3b3"
+                />
+                <ColorPicker
+                  title="しっぽ"
+                  ruby="Tail"
+                  color={tailColor}
+                  setColor={setTailColor}
+                  initialValue="#fff"
+                />
+                <ColorPicker
+                  title="しっぽの影"
+                  ruby="Tail shadow"
+                  color={tailShadowColor}
+                  setColor={setTailShadowColor}
+                  initialValue="#ccc"
+                />
+                <ColorPicker
+                  title="にくぜん"
+                  ruby="Wattle"
+                  color={moustacheColor}
+                  setColor={setMoustacheColor}
+                  initialValue="#b3b3b3"
+                />
+                <ColorPicker
+                  title="くちばし"
+                  ruby="Beak"
+                  color={beakColor}
+                  setColor={setBeakColor}
+                  initialValue="#ccc"
+                />
+                <ColorPicker
+                  title="あし"
+                  ruby="Foot"
+                  color={footColor}
+                  setColor={setFootColor}
+                  initialValue="#ccc"
+                />
+              </div>
+            </div>
+            <div className="m-3 rounded-xl bg-white p-3">
+              <h2 className="m-1 text-left text-xl">
+                <span className="font-mplus1 font-bold">らくがき選択</span>
+                <span className="mx-2 font-ubuntu text-sm">Doodle Select</span>
+              </h2>
+              <hr></hr>
+              <div className="flex flex-row">
+                <Toggle
+                  title="おでこ"
+                  ruby="forehead"
+                  state={hasForehead}
+                  setState={setForehead}
+                />
+                <Toggle
+                  title="ほお"
+                  ruby="cheek"
+                  state={hasCheek}
+                  setState={setCheek}
+                />
+                <Toggle
+                  title="ひげ"
+                  ruby="mustache"
+                  state={hasNose}
+                  setState={setNose}
+                />
+                <Toggle
+                  title="おなか"
+                  ruby="belly"
+                  state={hasBerry}
+                  setState={setBerry}
+                />
+              </div>
+            </div>
+            <div className="my-4 flex flex-row px-1">
               <button
-                className="mx-3 my-3 sm:my-0 flex sm:w-1/2 place-content-center rounded border-2 border-sky-200 bg-sky-400 py-2 px-4 font-bold hover:bg-sky-300"
+                className="mx-3 flex w-1/2 place-content-center rounded border-2 border-sky-200 bg-sky-400 py-2 px-4 font-bold hover:bg-sky-300"
                 onClick={setRandomColor}
               >
                 <span className="flex">
@@ -383,7 +417,7 @@ const Home = () => {
                 </span>
               </button>
               <button
-                className="mx-3 flex sm:w-1/2 place-content-center rounded bg-yellow-300 py-2 px-4 font-bold hover:bg-yellow-200"
+                className="mx-3 flex w-1/2 place-content-center rounded bg-yellow-300 py-2 px-4 font-bold hover:bg-yellow-200"
                 onClick={openModal}
               >
                 <span className="flex">
@@ -405,7 +439,7 @@ const Home = () => {
                 backgroundColor: 'rgba(255, 255, 255, 0.4)',
               }}
             />
-            <div className="my-4 text-left mx-3">
+            <div className="my-4 text-left">
               <span className="font-ubuntu font-bold text-white">
                 Follow us!!
               </span>
