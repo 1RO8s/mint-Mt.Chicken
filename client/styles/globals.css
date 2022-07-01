@@ -32,16 +32,10 @@ input:checked ~ .block {
 }
 
 .top-circle {
-  margin-top: -170px;
+  margin-top: -150px;
   width: 200px;
   height: 200px;
   border-radius: 200px 200px 200px 200px;
   background: #c70032;
   border: 10px solid #1a1a1a;
-}
-
-@media screen and (min-width: 640px){
-  .top-circle {
-    margin-top: -150px;
-  }
 }
