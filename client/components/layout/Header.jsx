@@ -48,7 +48,6 @@ const Header = ({btnState:{connectBtnMsg,setConnectBtnMsg}}) => {
           <BiWalletAlt className="my-auto mx-1 hidden sm:block" />
           <span>{connectBtnMsg}</span>
         </Button>
-        
       </div>
     </header>
   )
